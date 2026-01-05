@@ -13,9 +13,8 @@ export default function QuanLySanPham() {
         <div className="min-h-screen bg-white p-4 md:p-8">
             <div className="max-w-7xl mx-auto">
 
-                {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-                    <div>
+                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                    <div className="sticky top-10">
                         <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
                             Quản lý kho hàng
                         </h1>
@@ -26,12 +25,11 @@ export default function QuanLySanPham() {
 
                     <button className="inline-flex items-center justify-center gap-2 bg-accent-600 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-sm active:scale-95">
                         <PlusIcon className="w-5 h-5" />
-                        <span>Thêm sản phẩm</span>
+                        <Link href={"/quan-ly-san-pham/them-san-pham"}>Thêm sản phẩm</Link>
                     </button>
                 </div>
 
-                {/* Table */}
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-[700px] border-collapse">
                             <thead className="bg-slate-50/50 border-b border-slate-200">
@@ -45,8 +43,7 @@ export default function QuanLySanPham() {
                             <tbody className="divide-y divide-slate-100">
                                 {PRODUCT_DATA.map((product, index) => (
                                     <tr key={index} className="hover:bg-slate-50/80 transition-colors group">
-                                        {/* Thông tin */}
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center gap-4">
                                                 <div className="relative w-40 h-40 rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
                                                     <img
@@ -64,18 +61,15 @@ export default function QuanLySanPham() {
                                             </div>
                                         </td>
 
-                                        {/* Mô tả */}
-                                        <td className="px-6 py-4 text-slate-500 text-md max-w-xs truncate line-clamp-5">
+                                         <td className="px-6 py-4 text-slate-500 text-md max-w-xs truncate line-clamp-5">
                                             {product.description}
                                         </td>
 
-                                        {/* Giá niêm yết */}
-                                        <td className="px-6 py-4 whitespace-nowrap text-md font-bold text-slate-700">
+                                         <td className="px-6 py-4 whitespace-nowrap text-md font-bold text-slate-700">
                                             {formatVND(product.price)}
                                         </td>
 
-                                        {/* Thao tác */}
-                                        <td className="px-6 py-4 whitespace-nowrap text-right text-md">
+                                         <td className="px-6 py-4 whitespace-nowrap text-right text-md">
                                             <div className="flex items-center justify-end gap-2">
                                                 <Link
                                                     href={`/quan-ly-san-pham/${product.slug}`}
