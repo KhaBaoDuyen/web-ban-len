@@ -6,11 +6,11 @@ export const HeaderData: HeaderGroup[] = [
         path: "/",
     },
     {
-        title: "Sản phẩm",
-        path: "/san-pham",
-    },
-    {
         title: "Mã thanh toán",
         path: "/ma-thanh-toan",
+    },
+    {
+        title: "Danh sách sản phẩm",
+        path: "/quan-ly-san-pham",
     },
 ];
