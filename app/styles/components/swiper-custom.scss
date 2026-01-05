@@ -1,0 +1,24 @@
+@import "../abstracts/colors";
+
+.swiper-button-next,
+.swiper-button-prev {
+  border: 2px solid $accent-50;
+  border-radius: 9999px;
+  background: transparent;
+  color: $accent-50;
+  transition: all 0.3s ease;
+  padding: 10px;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  border-color: $accent-400;
+  color: $accent-50;
+  background: $accent-400;
+}

@@ -1,0 +1,28 @@
+.custom-scroll-x::-webkit-scrollbar {
+    height: 4px;
+}
+
+.custom-scroll-x::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scroll-x::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 999px;
+}
+
+ .custom-scroll-x {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+ .no-spinner {
+    -moz-appearance: textfield;
+}

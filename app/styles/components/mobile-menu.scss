@@ -1,0 +1,27 @@
+/* styles.scss */
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);  
+  z-index: 40;
+}
+
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh; 
+  width: 280px;
+  background-color: #1f1f1f;  
+  color: white;
+  z-index: 50;
+  overflow-y: auto;
+  padding: 1rem;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.3);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+
+  &.open {
+    transform: translateX(0);
+  }
+}

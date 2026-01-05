@@ -1,0 +1,29 @@
+@import '../abstracts/colors';
+
+.title-primary-600 {
+    color: $accent-600;
+    font-weight: 600;
+}
+
+.title-primary-700 {
+    color: $accent-700;
+    font-weight: 700;
+}
+
+.title-lg-primary-600 {
+    color: $text-on-primary;
+    font-weight: 700;
+    font-family: 'Chakra Petch', sans-serif;
+    line-height: 1.2;
+ }
+
+.title-sec {
+    font-family: 'Chakra Petch', sans-serif;
+    line-height: 1.2;
+}
+.title-product{
+    color: white;
+    &:hover{
+        color: $accent-500;
+    }
+}
