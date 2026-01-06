@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { User, Lock, ArrowRight } from "lucide-react";
+import { User, Lock, ArrowRight, EyeOff, Eye } from "lucide-react";
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -10,6 +10,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,15 +22,18 @@ export default function LoginPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
+        credentials: "include",
       });
 
       const data = await res.json();
 
       if (res.ok) {
-        router.push("/danh-sach-don-hang");
+        router.replace("/");
+        router.refresh();
       } else {
         setError(data.message || "Tên đăng nhập hoặc mật khẩu sai");
       }
+
     } catch (err) {
       setError("Đã xảy ra lỗi kết nối");
     } finally {
@@ -62,15 +66,27 @@ export default function LoginPage() {
 
           <div className="space-y-2">
             <label className="text-sm font-semibold text-slate-700 ml-1">Mật khẩu</label>
+
             <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#6b4b3a]" size={20} />
+
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
-                className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-[#A3785E] focus:border-transparent outline-none transition-all"
-                placeholder="••••••••"
+                className="w-full pl-12 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl 
+      text-slate-800 placeholder:text-slate-400
+      focus:ring-2 focus:ring-[#A3785E] focus:border-transparent outline-none transition-all"
+                placeholder="Mật khẩu Admin"
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-[#6b4b3a]"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
           </div>
 

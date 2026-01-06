@@ -31,7 +31,7 @@ export const ScrollToTop = () => {
   return (
     <button
       onClick={scrollToTop}
-      className="fixed bottom-8 right-8 z-[60] p-3 rounded-full bg-[#A3785E] text-white shadow-lg transition-all duration-300 hover:bg-[#8B624A] hover:scale-110 active:scale-90 animate-in fade-in zoom-in"
+      className="fixed bottom-5 right-5 z-[60] p-3 rounded-full bg-[#A3785E] text-white shadow-lg transition-all duration-300 hover:bg-[#8B624A] hover:scale-110 active:scale-90 animate-in fade-in zoom-in"
     >
       <ChevronUp size={24} strokeWidth={2.5} />
     </button>

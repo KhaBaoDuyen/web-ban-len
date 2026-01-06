@@ -22,12 +22,12 @@ export async function POST(req: Request) {
     }
 
     const cookieStore = await cookies();
-    
+
     cookieStore.set("auth_session", JSON.stringify({ username: isValid.user }), {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       path: "/",
-      maxAge: 60 * 60 * 24 * 365 * 10,  
+      maxAge: 60 * 60 * 24 * 365 * 10,
       sameSite: "lax",
     });
 

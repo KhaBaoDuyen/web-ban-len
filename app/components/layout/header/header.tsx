@@ -34,7 +34,7 @@ export const Header = () => {
   return (
     <>
 
-      <header className=" fixed top-0 left-0 w-full z-50 bg-primary-500 text-white flex flex-col justify-center items-start shadow-xl">
+      <header className=" w-full z-50 bg-primary-500 text-white flex flex-col justify-center items-start shadow-xl">
         <div className="mx-auto flex  w-11/12 lg:w-10/12 items-center justify-between lg:py-4">
           <div className="flex lg:hidden rounded-md bg-surface-100 items-center">
             <button
@@ -74,8 +74,7 @@ export const Header = () => {
             )}
           </div>
         </div>
-        <hr className="h-[0.5px] w-full hidden lg:block bg-gray-200/60" />
-        <nav className="hidden w-full mx-auto bg-primary-700    lg:flex my-1">
+         <nav className="hidden w-full mx-auto bg-primary-700    lg:flex my-1">
           <div className="flex lg:w-10/12 mx-auto gap-4">
             {filteredNav.map((group, index) => (
               <MainDropdown
@@ -107,7 +106,7 @@ export const Header = () => {
 
           <div className="flex-1 flex flex-col   overflow-y-auto">
             <div className="w-full max-w-2xl text-center space-y-10 animate-in slide-in-from-bottom-5 duration-500">
-              <nav className="flex flex-col gap-8">
+              <nav className="flex flex-col gap-5">
                 {filteredNav.map((group, index) => (
                   <div key={index} className="group">
                     <MobileMenuItem

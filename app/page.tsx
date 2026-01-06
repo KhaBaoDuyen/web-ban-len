@@ -29,7 +29,7 @@ export default function Home() {
 
   return (
     <div className="">
-      <section className="relative w-full h-fit bg-primary-700 py-5 lg:py-10  gap-12 overflow-hidden">
+      <section className="relative w-full h-fit bg-primary-800 py-5 lg:py-10  gap-12 overflow-hidden">
         <span className="lg:w-10/12 w-11/12 mx-auto flex flex-col lg:flex-row items-center justify-between">
           <div className="flex-1  z-10">
             <h1 className="text-3xl lg:text-6xl font-bold text-accent-300 mb-6 tracking-tight">
