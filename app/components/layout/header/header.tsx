@@ -20,8 +20,8 @@ export const Header = () => {
   return (
     <>
 
-      <header className="bg-primary-500 text-white">
-        <div className="mx-auto flex lg:flex-col w-11/12 lg:w-10/12 items-center justify-between ">
+      <header className="bg-primary-500 text-white shadow-xl">
+        <div className="mx-auto flex lg:flex-col w-11/12 lg:w-10/12 items-center justify-between py-4">
 
           <div className="flex lg:hidden rounded-md bg-surface-100 items-center">
             <button
@@ -32,7 +32,7 @@ export const Header = () => {
             </button>
           </div>
 
-          <Link href="/" className="lg:w-2/12 w-4/12">
+          <Link href="/" className="lg:w-1/12 w-4/12">
             <Image
               src={logo}
               alt="logo"
@@ -40,8 +40,8 @@ export const Header = () => {
               className="w-full h-auto"
             />
           </Link>
-
-           <nav className="hidden w-fit  lg:flex  ">
+          <Search />
+          <nav className="hidden w-fit  lg:flex  ">
             <div className="flex  mx-auto ">
               {HeaderData.map((group, index) => (
                 <MainDropdown
@@ -62,6 +62,7 @@ export const Header = () => {
               <span>Đăng nhập</span>
             </Link>
           </nav>
+
         </div>
 
 
@@ -77,7 +78,7 @@ export const Header = () => {
               />
             ))}
 
-     
+
             <Link
               href="/login"
               className="flex items-center gap-2 px-5 py-3 border-b border-white/10 hover:bg-white/5"

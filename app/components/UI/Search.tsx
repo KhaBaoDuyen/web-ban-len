@@ -45,7 +45,7 @@ export const Search = ({
 
             <button
                 className="
-                    bg-accent-600
+                    bg-primary-700
                     min-w-max
                     px-4
                     py-2

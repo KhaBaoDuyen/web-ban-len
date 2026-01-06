@@ -6,6 +6,7 @@ import "./styles/main.scss";
 import { Header } from "./components/layout/header/header";
 import { useState, useEffect } from "react";
 import logo from "../public/assets/logo-light.png";
+import { ScrollToTop } from "./components/UI/ScrollToTop";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -61,6 +62,7 @@ export default function RootLayout({
           <>
             <Header />
             {children}
+            <ScrollToTop />
           </>
         )}
       </body>
