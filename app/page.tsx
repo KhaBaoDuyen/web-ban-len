@@ -48,7 +48,7 @@ export default function Home() {
                 href="https://zalo.me/0337019197"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-8 py-3 bg-accent-200 text-slate-900 border border-slate-200 rounded-full font-bold hover:bg-slate-50 transition-all"
+                className="px-8 py-3 ml-3 bg-accent-200 text-slate-900 border border-slate-200 rounded-full font-bold hover:bg-slate-50 transition-all"
               >
                 Chat Zalo ngay
               </a>
