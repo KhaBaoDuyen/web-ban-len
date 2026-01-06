@@ -21,7 +21,8 @@ export const Header = () => {
     <>
 
       <header className="bg-primary-500 text-white">
-        <div className="mx-auto flex w-11/12 lg:w-10/12 items-center justify-between py-3">
+        <div className="mx-auto flex w-11/12 lg:w-10/12 items-end justify-between ">
+
           <div className="flex lg:hidden rounded-md bg-surface-100 items-center">
             <button
               className="text-primary p-1"
@@ -40,35 +41,29 @@ export const Header = () => {
             />
           </Link>
 
-          <Search />
-
-          <div className="flex items-center gap-4">
-
-
+           <nav className="hidden w-fit  lg:flex  ">
+            <div className="flex  mx-auto ">
+              {HeaderData.map((group, index) => (
+                <MainDropdown
+                  key={index}
+                  title={group.title}
+                  path={group.path}
+                  categories={group.categories}
+                  brands={group.brands}
+                  popularSearches={group.popularSearches}
+                />
+              ))}
+            </div>
             <Link
               href="/login"
-              className="hidden lg:flex items-center gap-1 hover:text-red-400"
+              className="hidden lg:flex items-center gap-1 font-bold hover:text-red-400"
             >
-              <User size={20} />
+              | <User size={20} />
               <span>Đăng nhập</span>
             </Link>
-          </div>
+          </nav>
         </div>
 
-        <nav className="hidden lg:flex mx-auto border-t border-white/20 py-1">
-          <div className="flex w-11/12 lg:w-10/12 mx-auto ">
-            {HeaderData.map((group, index) => (
-              <MainDropdown
-                key={index}
-                title={group.title}
-                path={group.path}
-                categories={group.categories}
-                brands={group.brands}
-                popularSearches={group.popularSearches}
-              />
-            ))}
-          </div>
-        </nav>
 
         {openMenu && (
           <div className="lg:hidden border-t border-white/20 bg-primary-500 animate-in slide-in-from-top   duration-300">
