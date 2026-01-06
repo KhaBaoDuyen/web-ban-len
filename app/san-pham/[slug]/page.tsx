@@ -10,6 +10,7 @@ import {
     FiChevronUp, FiChevronDown, FiShield, FiTruck,
     FiRefreshCw, FiUser, FiPhone, FiCreditCard, FiPackage
 } from "react-icons/fi";
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function ProductDetail() {
     const params = useParams();
@@ -35,17 +36,46 @@ export default function ProductDetail() {
             .catch(() => setLoading(false));
     }, [slug]);
 
-    const handleCheckout = () => {
+    const handleCheckout = async () => {
         let valid = true;
         const newErrors = { name: "", phone: "" };
 
-        if (!customerInfo.name.trim()) { newErrors.name = "Vui lòng nhập họ tên"; valid = false; }
-        if (!customerInfo.phone.trim()) { newErrors.phone = "Vui lòng nhập số điện thoại"; valid = false; }
-
+        if (!customerInfo.name.trim()) { newErrors.name = "Họ tên không được để trống"; valid = false; }
         setErrors(newErrors);
 
-        if (valid) {
-            alert(`Đặt hàng thành công!`);
+        if (!valid) {
+            toast.error("Vui lòng kiểm tra lại thông tin!");
+            return;
+        }
+
+        const loadingToast = toast.loading("Đang gửi đơn hàng móc len...");
+
+        try {
+            const response = await fetch("/api/orders", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    productId: data?._id,
+                    productName: data.name,
+                    price: data.price,
+                    quantity: quantity,
+                    customerName: customerInfo.name,
+                    customerPhone: customerInfo.phone,
+                    paymentMethod: customerInfo.paymentMethod,
+                }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                toast.success("Đặt hàng thành công!", { id: loadingToast });
+                setCustomerInfo({ name: "", phone: "", paymentMethod: "cod" });
+                setQuantity(1);
+            } else {
+                toast.error(result.message || "Đặt hàng thất bại", { id: loadingToast });
+            }
+        } catch (error) {
+            toast.error("Lỗi mạng, không thể gửi đơn hàng", { id: loadingToast });
         }
     };
 
@@ -53,9 +83,10 @@ export default function ProductDetail() {
     if (!data) return <div className="min-h-screen flex items-center justify-center text-red-500 font-bold">Sản phẩm không tồn tại!</div>;
 
     return (
-        <div className="bg-slate-50 min-h-screen pb-10">
+        <div className=" min-h-screen pb-10">
+            <Toaster position="top-center" reverseOrder={false} />
             <div className="bg-white  ">
-                <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-2 text-sm text-slate-500 overflow-x-auto whitespace-nowrap">
+                <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-2 text-sm text-accent-600 overflow-x-auto whitespace-nowrap">
                     <Link href="/" className="hover:text-accent-600 transition">Trang chủ</Link>
                     <FiChevronRight size={14} />
                     <Link href="/san-pham" className="hover:text-accent-600 transition">Sản phẩm</Link>
@@ -89,7 +120,7 @@ export default function ProductDetail() {
                                 {formatVND(Number(data.price))}
                             </div>
 
-                            <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4 mb-6">
+                            <div className="bg-primary-50 p-5 rounded-xl border border-slate-200 space-y-4 mb-6">
                                 <h3 className="font-bold text-slate-800 flex items-center gap-2">
                                     <FiShoppingCart className="text-accent-600" /> Thông tin đặt hàng
                                 </h3>
@@ -149,7 +180,7 @@ export default function ProductDetail() {
                                 </div>
                                 <button
                                     onClick={handleCheckout}
-                                    className="w-full flex-1 h-14 bg-accent-600 text-white font-bold py-2  rounded-xl hover:bg-accent-700 transition shadow-lg shadow-accent-100 uppercase tracking-widest text-sm"
+                                    className="w-full flex-1 h-14 bg-primary-600 text-white font-bold py-2  rounded-xl hover:bg-accent-600 transition shadow-lg shadow-accent-100 uppercase tracking-widest text-sm"
                                 >
                                     Đặt hàng ngay
                                 </button>
