@@ -41,6 +41,7 @@ export default function ProductDetail() {
         const newErrors = { name: "", phone: "" };
 
         if (!customerInfo.name.trim()) { newErrors.name = "Họ tên không được để trống"; valid = false; }
+        if (!customerInfo.phone.trim()) { newErrors.phone = "Số điện thoại không được để trống"; valid = false; }
         setErrors(newErrors);
 
         if (!valid) {
@@ -61,7 +62,7 @@ export default function ProductDetail() {
                     quantity: quantity,
                     customerName: customerInfo.name,
                     customerPhone: customerInfo.phone,
-                    paymentMethod: customerInfo.paymentMethod,
+                    paymentMethod: customerInfo.paymentMethod = "cod",
                 }),
             });
 
@@ -163,11 +164,11 @@ export default function ProductDetail() {
                                             <FiPackage className={customerInfo.paymentMethod === 'cod' ? 'text-accent-600' : 'text-slate-400'} />
                                             <span className={`text-sm font-bold ${customerInfo.paymentMethod === 'cod' ? 'text-accent-600' : 'text-slate-600'}`}>Khi nhận hàng</span>
                                         </label>
-                                        <label className={`lg:flex items-center gap-2 p-3 rounded-lg border cursor-pointer transition ${customerInfo.paymentMethod === 'transfer' ? 'border-accent-600 bg-accent-50' : 'border-slate-200 bg-white hover:border-accent-300'}`}>
+                                        {/* <label className={`lg:flex items-center gap-2 p-3 rounded-lg border cursor-pointer transition ${customerInfo.paymentMethod === 'transfer' ? 'border-accent-600 bg-accent-50' : 'border-slate-200 bg-white hover:border-accent-300'}`}>
                                             <input type="radio" name="payment" className="hidden" onChange={() => setCustomerInfo({ ...customerInfo, paymentMethod: 'transfer' })} />
                                             <FiCreditCard className={customerInfo.paymentMethod === 'transfer' ? 'text-accent-600' : 'text-slate-400'} />
                                             <span className={`text-sm font-bold ${customerInfo.paymentMethod === 'transfer' ? 'text-accent-600' : 'text-slate-600'}`}>Chuyển khoản</span>
-                                        </label>
+                                        </label> */}
                                     </div>
                                 </div>
                             </div>

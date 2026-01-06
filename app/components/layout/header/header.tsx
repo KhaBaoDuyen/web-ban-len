@@ -21,7 +21,7 @@ export const Header = () => {
     <>
 
       <header className="bg-primary-500 text-white">
-        <div className="mx-auto flex w-11/12 lg:w-10/12 items-end justify-between ">
+        <div className="mx-auto flex lg:flex-col w-11/12 lg:w-10/12 items-center justify-between ">
 
           <div className="flex lg:hidden rounded-md bg-surface-100 items-center">
             <button
@@ -56,7 +56,7 @@ export const Header = () => {
             </div>
             <Link
               href="/login"
-              className="hidden lg:flex items-center gap-1 font-bold hover:text-red-400"
+              className="hidden lg:flex items-center gap-1 font-bold hover:text-gray-200"
             >
               | <User size={20} />
               <span>Đăng nhập</span>
@@ -77,13 +77,7 @@ export const Header = () => {
               />
             ))}
 
-            <Link
-              href="/cart"
-              className="flex items-center gap-2 px-5 py-3 border-b border-white/10 hover:bg-white/5"
-            >
-              Giỏ hàng ({cartCount})
-            </Link>
-
+     
             <Link
               href="/login"
               className="flex items-center gap-2 px-5 py-3 border-b border-white/10 hover:bg-white/5"

@@ -43,8 +43,7 @@ export default function ThanhToan() {
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-8">
-                    {/* Momo Card */}
-                    <div className="bg-white rounded-3xl p-8 shadow-sm border border-pink-100 relative overflow-hidden">
+                     <div className="bg-white rounded-3xl p-8 shadow-sm border border-pink-100 relative overflow-hidden">
                         <div className="absolute top-0 right-0 bg-pink-500 text-white px-4 py-1 rounded-bl-xl text-xs font-bold uppercase">
                             Momo
                         </div>
