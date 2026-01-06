@@ -9,6 +9,8 @@ import {
 import { formatVND } from "../utils/formatVND";
 import { useEffect, useState } from "react";
 import type { Product } from "@/app/types/product.type";
+import { useRouter } from "next/navigation";
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function QuanLySanPham() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -33,11 +35,42 @@ export default function QuanLySanPham() {
 
     // CAP NHAT STATUS 
     const toggleStatus = async (id: string, currentStatus: 0 | 1) => {
-    
+
     };
+
+    //XOA SAN PHAM
+    const router = useRouter();
+    const [isDeleting, setIsDeleting] = useState(false);
+    const handleDelete = async (slug: string) => {
+        if (isDeleting) return;
+        if (!confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) return;
+
+        setIsDeleting(true);
+        try {
+            const res = await fetch(`/api/products/${slug}`, {
+                method: "DELETE",
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                toast.success("Xóa thành công!");
+                setProducts(prev => prev.filter(p => p.slug !== slug));
+            } else {
+                toast.error(data.message || "Có lỗi xảy ra");
+            }
+        } catch (error) {
+            console.error("Lỗi khi xóa:", error);
+            toast.error("Không thể kết nối đến server");
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
 
     return (
         <div className="min-h-screen bg-white p-4 md:p-8">
+            <Toaster position="top-center" reverseOrder={false} />
             <div className="max-w-7xl mx-auto">
 
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
@@ -121,9 +154,18 @@ export default function QuanLySanPham() {
                                                     >
                                                         <PencilSquareIcon className="w-5 h-5" />
                                                     </Link>
-                                                    <button className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleDelete(product.slug)}
+                                                        disabled={isDeleting}
+                                                        className={`p-2 rounded-lg transition-all ${isDeleting
+                                                                ? "opacity-50 cursor-not-allowed bg-slate-100"
+                                                                : "text-slate-400 hover:text-red-600 hover:bg-red-50"
+                                                            }`}
+                                                    >
                                                         <TrashIcon className="w-5 h-5" />
                                                     </button>
+
                                                 </div>
                                             </td>
                                         </tr>
@@ -158,9 +200,17 @@ export default function QuanLySanPham() {
                                 >
                                     <PencilSquareIcon className="w-5 h-5" />
                                 </Link>
-                                <button className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all">
+                                <button
+                                    onClick={() => handleDelete(product.slug)}
+                                    disabled={isDeleting}
+                                    className={`p-2 rounded-lg transition-all ${isDeleting
+                                        ? "opacity-50 cursor-not-allowed bg-slate-100"
+                                        : "text-slate-400 hover:text-red-600 hover:bg-red-50"
+                                        }`}
+                                >
                                     <TrashIcon className="w-5 h-5" />
                                 </button>
+
                             </div>
                         </div>
                     ))}

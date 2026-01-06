@@ -42,9 +42,7 @@ export async function GET(
     }
 }
 
- /* =========================
-    PUT /api/products/[slug]
-   ========================= */
+//CAP NHAT SAN PHAM
 export async function PUT(
     req: NextRequest,
     { params }: { params: Promise<{ slug: string }> }  
@@ -105,5 +103,59 @@ export async function PUT(
 
     } catch (error: any) {
         return NextResponse.json({ message: error.message }, { status: 500 });
+    }
+}
+
+// XOA SAN PHAM
+export async function DELETE(
+    req: NextRequest,
+    { params }: { params: Promise<{ slug: string }> }
+) {
+    try {
+        const { slug } = await params;
+
+        const client = await clientPromise;
+        const db = client.db("mydatabase");
+
+         const existingProduct = await db.collection("products").findOne({ slug });
+
+        if (!existingProduct) {
+            return NextResponse.json(
+                { message: "Sản phẩm không tồn tại" },
+                { status: 404 }
+            );
+        }
+
+         if (existingProduct.image) {
+            try {
+                const urlParts = existingProduct.image.split("/");
+                const fileName = urlParts[urlParts.length - 1].split(".")[0];
+                const publicId = `products/${fileName}`; 
+
+                await cloudinary.uploader.destroy(publicId);
+            } catch (cloudErr) {
+                console.error("Lỗi xóa ảnh Cloudinary:", cloudErr);
+             }
+        }
+
+         const result = await db.collection("products").deleteOne({ slug });
+
+        if (result.deletedCount === 1) {
+            return NextResponse.json(
+                { message: "Xóa sản phẩm thành công" },
+                { status: 200 }
+            );
+        } else {
+            return NextResponse.json(
+                { message: "Không thể xóa sản phẩm" },
+                { status: 400 }
+            );
+        }
+
+    } catch (error: any) {
+        return NextResponse.json(
+            { message: "Lỗi server: " + error.message },
+            { status: 500 }
+        );
     }
 }
