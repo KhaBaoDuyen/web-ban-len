@@ -188,7 +188,7 @@ export default function QuanLySanPham() {
                                 <div className="flex flex-col">
                                     <span className="font-semibold text-slate-700">{product.name}</span>
                                     <span className="text-xs text-slate-400 mt-0.5">ID: #SP-{1000 + index}</span>
-                                    <span className="text-sm font-bold text-slate-700 mt-1">{formatVND(product.price)}</span>
+                                    <span className="text-sm font-bold text-slate-700 mt-1">{formatVND(Number(product.price))}</span>
                                     <p className="text-xs text-slate-500 mt-1 line-clamp-2">{product.description}</p>
                                 </div>
                             </div>
