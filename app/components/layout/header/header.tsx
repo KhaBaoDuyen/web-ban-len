@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Menu, X, ShoppingCart, User, Check } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import logo from "../../../../public/assets/logo-light.png";
 import { HeaderData } from "./header.data";
@@ -14,9 +14,23 @@ import { MainDropdown } from "../../../components/UI/MainDropdown/MainDropdown";
 import { MobileMenuItem } from "../../../components/UI/Mobile/MobileMenuItem/MobileMenuItem";
 
 export const Header = () => {
-  const cartCount = 3;
   const [openMenu, setOpenMenu] = useState(false);
+  const [user, setUser] = useState<{ username: string } | null>(null);
 
+  useEffect(() => {
+      fetch("/api/auth/me", { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => setUser(data.user))
+      .catch(() => setUser(null));
+  }, []);
+
+  const filteredNav = HeaderData.filter((item) => {
+    const privatePaths = ["/quan-ly-san-pham", "/danh-sach-don-hang"];
+    if (!user && privatePaths.includes(item.path)) {
+      return false;
+    }
+    return true;
+  });
   return (
     <>
 
@@ -41,9 +55,9 @@ export const Header = () => {
             />
           </Link>
           <Search />
-          <nav className="hidden w-fit  lg:flex  ">
-            <div className="flex  mx-auto ">
-              {HeaderData.map((group, index) => (
+          <nav className="hidden w-fit lg:flex my-1">
+            <div className="flex mx-auto gap-4">
+              {filteredNav.map((group, index) => (
                 <MainDropdown
                   key={index}
                   title={group.title}
@@ -54,21 +68,33 @@ export const Header = () => {
                 />
               ))}
             </div>
-            <Link
-              href="/login"
-              className="hidden lg:flex items-center gap-1 font-bold hover:text-gray-200"
-            >
-              | <User size={20} />
-              <span>Đăng nhập</span>
-            </Link>
+
+            <div className="flex items-center border-l border-white/20 pl-6 ml-2">
+              {user ? (
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1.5 text-sm font-bold text-white bg-white/10 px-3 py-1.5 rounded-lg">
+                    <User size={18} />
+                    <span>{user.username}</span>
+                  </div>
+                </div>
+              ) : (
+                <Link
+                  href="/dang-nhap"
+                  className="flex items-center gap-1 font-bold hover:text-gray-200 text-white"
+                >
+                  <User size={20} />
+                  <span>Đăng nhập</span>
+                </Link>
+              )}
+            </div>
           </nav>
 
         </div>
 
 
         {openMenu && (
-          <div className="lg:hidden border-t border-white/20 bg-primary-500 animate-in slide-in-from-top   duration-300">
-            {HeaderData.map((group, index) => (
+          <div className="lg:hidden border-t border-white/20 bg-primary-500 animate-in slide-in-from-top duration-300">
+            {filteredNav.map((group, index) => (
               <MobileMenuItem
                 key={index}
                 title={group.title}
@@ -78,13 +104,19 @@ export const Header = () => {
               />
             ))}
 
-
-            <Link
-              href="/login"
-              className="flex items-center gap-2 px-5 py-3 border-b border-white/10 hover:bg-white/5"
-            >
-              Đăng nhập
-            </Link>
+            {user ? (
+              <div className="flex items-center gap-2 px-5 py-3 border-b border-white/10 text-white">
+                <User size={18} />
+                <span>{user.username}</span>
+              </div>
+            ) : (
+              <Link
+                href="/dang-nhap"
+                className="flex items-center gap-2 px-5 py-3 border-b border-white/10 hover:bg-white/5 text-white"
+              >
+                Đăng nhập
+              </Link>
+            )}
           </div>
         )}
       </header>
