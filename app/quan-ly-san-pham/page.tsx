@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import type { Product } from "@/app/types/product.type";
 
 export default function QuanLySanPham() {
-    const [products, setProducts] = useState();
+    const [products, setProducts] = useState<Product[]>([]);
     useEffect(() => {
         getAllProduct();
     }, []);
@@ -33,27 +33,7 @@ export default function QuanLySanPham() {
 
     // CAP NHAT STATUS 
     const toggleStatus = async (id: string, currentStatus: 0 | 1) => {
-        const newStatus = currentStatus === 1 ? 0 : 1;
-
-        try {
-            const res = await fetch(`/api/products/${id}/status`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ status: newStatus }),
-            });
-
-            if (!res.ok) throw new Error("Update status failed");
-
-            setProducts((prev) =>
-                prev.map((p) =>
-                    p._id === id ? { ...p, status: newStatus } : p
-                )
-            );
-        } catch (error) {
-            console.error(error);
-        }
+    
     };
 
     return (
@@ -121,15 +101,14 @@ export default function QuanLySanPham() {
                                             </td>
 
                                             <td className="px-6 py-4 whitespace-nowrap text-center text-md font-bold text-slate-700">
-                                                {formatVND(product.price)}
+                                                {formatVND(Number(product.price))}
                                             </td>
                                             <td className="px-6 py-4 text-center whitespace-nowrap">
                                                 <button
-                                                    onClick={() => toggleStatus(product._id, product.status)}
                                                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors
                                                     ${product.status === "active" ? "bg-green-500" : "bg-slate-300"}`} >
                                                     <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform
-                                                    ${product.status === "active" ? "translate-x-5" : "translate-x-1"}`}  />
+                                                    ${product.status === "active" ? "translate-x-5" : "translate-x-1"}`} />
                                                 </button>
 
                                             </td>

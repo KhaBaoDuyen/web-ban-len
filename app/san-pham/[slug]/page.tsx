@@ -57,8 +57,8 @@ export default function ProductDetail() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     productId: data?._id,
-                    productName: data.name,
-                    price: data.price,
+                    productName: data?.name,
+                    price: data?.price,
                     quantity: quantity,
                     customerName: customerInfo.name,
                     customerPhone: customerInfo.phone,

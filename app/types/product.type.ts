@@ -4,6 +4,7 @@ export type Product = {
     slug: string;
     price: string;
     image: File | null;
+    imageUrl?: string | null; 
     description: string;
     status: "active" | "inactive";
 };

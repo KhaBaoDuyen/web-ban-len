@@ -180,7 +180,7 @@ export default function ProductForm({
 
 
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const raw = e.target.value.replace(/\D/g, ""); 
+        const raw = e.target.value.replace(/\D/g, "");
 
         if (!raw) {
             setFormData((p) => ({ ...p, price: "" }));

@@ -46,8 +46,8 @@ export default function EditProductForm() {
                 slug: data.slug,
                 price: String(data.price),
                 description: data.description,
-                imageUrl: data.image,
-                status:data.status,
+                imageUrl: data.image ? URL.createObjectURL(data.image) : null,
+                status: data.status,
             }}
             onSubmit={handleUpdate}
         />
