@@ -115,7 +115,6 @@ export const Header = () => {
                       path={group.path}
                       items={group.categories}
                       onCloseMenu={() => setOpenMenu(false)}
-                      className="text-3xl md:text-5xl font-bold text-white   transition-colors"
                     />
                   </div>
                 ))}
