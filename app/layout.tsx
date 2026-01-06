@@ -61,7 +61,7 @@ export default function RootLayout({
         ) : (
           <>
             <Header />
-            <main className="mt-[10%] py-10">
+            <main className="mt-[10%] py-5">
               {children}
             </main>
             <ScrollToTop />
