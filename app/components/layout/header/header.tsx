@@ -19,25 +19,7 @@ export const Header = () => {
 
   return (
     <>
-       <div className="bg-accent-600 hidden lg:block">
-        <ul className="flex items-center justify-between gap-6 px-6 py-3">
-          {[
-            "Tư vấn chuẩn, chọn đúng gear",
-            "Bảo hành gọn, xử lý nhanh",
-            "Giao nhanh 0–3 ngày",
-            "Miễn phí ship từ 1 triệu",
-            "Trả góp 0%",
-          ].map((text, index) => (
-            <li key={index} className="flex items-center text-sm text-white">
-              <span className="flex items-center justify-center w-5 h-5 rounded-full border border-white mr-2">
-                <Check size={12} />
-              </span>
-              <span>{text}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
+      
        <header className="bg-primary-500 text-white">
         <div className="mx-auto flex w-11/12 lg:w-10/12 items-center justify-between py-3">
            <div className="flex lg:hidden rounded-md bg-surface-100 items-center">

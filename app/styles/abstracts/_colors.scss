@@ -1,41 +1,39 @@
-// primary colors
-$primary-50:  #eef2ff;
-$primary-100: #dbe2ff;
-$primary-200: #b8c4ff;
-$primary-300: #8fa0ff;
-$primary-400: #5c70e6;
-$primary-500: #021d6b; // MAIN
-$primary-600: #021858;
-$primary-700: #011246;
-$primary-800: #010c33;
-$primary-900: #010820;
+// Primary colors (nâu pastel)
+$primary-50:  #f5f1ed;
+$primary-100: #e6dacf;
+$primary-200: #d6c2b0;
+$primary-300: #c7aa91;
+$primary-400: #b89072;
+$primary-500: #a87654; // MAIN
+$primary-600: #9d6646;
+$primary-700: #8f593b;
+$primary-800: #7d492f;
+$primary-900: #6a3823;
 
-// accent / orange
-$accent-50:  #fff3ea;
-$accent-100: #ffe0cc;
-$accent-200: #ffc29a;
-$accent-300: #ff9a5c;
-$accent-400: #f07a2a;
-$accent-500: #e56a18;
-$accent-600: #df5f0a; // MAIN  
-$accent-700: #EA4E2B;
-$accent-800: #8a3906;
-$accent-900: #5c2504;
+// Accent colors (cam pastel)
+$accent-50:  #fff4ed;
+$accent-100: #ffe6cc;
+$accent-200: #ffd3a9;
+$accent-300: #ffbf85;
+$accent-400: #ffaa61;
+$accent-500: #ff943d; // MAIN
+$accent-600: #e6802d;
+$accent-700: #cc6a1f;
+$accent-800: #b35413;
+$accent-900: #993f09;
 
-$danger: #ef4444;
+// Surface colors (nền & card)
+$surface-50:  #fff4ed;  // nền toàn trang
+$surface-100: #fef0e0;  // card
+$surface-200: #f5dcc0;  // border, divider
+$surface-300: #eec29a;
 
+// Text colors
+$text-heading:    #5c3b2e; // tiêu đề, nâu đậm
+$text-primary:    #7d5743; // body, nâu trung
+$text-secondary:  #a07b66; // description, nâu nhạt
+$text-on-primary: #fff8f2; // text trên nền primary
+$text-muted:      #c1aa96; // placeholder / hint
 
-// secondary colors
-$surface-50:  #F9FAFF;  // nền toàn trang
-$surface-100: #f6ead4; // card
-$surface-200: #ecd9b2; // border, divider
-$surface-300: #f3b435; 
-
- 
-// text colors
-$text-heading:    #021d6b; // title
-$text-primary:    #1f2f6d; // body
-$text-secondary:  #4f5f9a; // description
-$text-on-primary: #fdf8f0; // text trên nền primary
-$text-muted:      #8a93c4; // placeholder / hint
-
+// Danger
+$danger: #ef4444; // vẫn giữ đỏ
