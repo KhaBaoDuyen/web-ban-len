@@ -18,7 +18,7 @@ export const Header = () => {
   const [user, setUser] = useState<{ username: string } | null>(null);
 
   useEffect(() => {
-      fetch("/api/auth/me", { credentials: "include" })
+    fetch("/api/auth/me", { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setUser(data.user))
       .catch(() => setUser(null));
@@ -34,9 +34,8 @@ export const Header = () => {
   return (
     <>
 
-      <header className="bg-primary-500 text-white shadow-xl">
-        <div className="mx-auto flex lg:flex-col w-11/12 lg:w-10/12 items-center justify-between py-4">
-
+      <header className=" fixed top-0 left-0 w-full z-50 bg-primary-500 text-white flex flex-col justify-center items-start shadow-xl">
+        <div className="mx-auto flex  w-11/12 lg:w-10/12 items-center justify-between lg:py-4">
           <div className="flex lg:hidden rounded-md bg-surface-100 items-center">
             <button
               className="text-primary p-1"
@@ -55,71 +54,95 @@ export const Header = () => {
             />
           </Link>
           <Search />
-          <nav className="hidden w-fit lg:flex my-1">
-            <div className="flex mx-auto gap-4">
-              {filteredNav.map((group, index) => (
-                <MainDropdown
-                  key={index}
-                  title={group.title}
-                  path={group.path}
-                  categories={group.categories}
-                  brands={group.brands}
-                  popularSearches={group.popularSearches}
-                />
-              ))}
-            </div>
 
-            <div className="flex items-center border-l border-white/20 pl-6 ml-2">
-              {user ? (
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1.5 text-sm font-bold text-white bg-white/10 px-3 py-1.5 rounded-lg">
-                    <User size={18} />
-                    <span>{user.username}</span>
-                  </div>
-                </div>
-              ) : (
-                <Link
-                  href="/dang-nhap"
-                  className="flex items-center gap-1 font-bold hover:text-gray-200 text-white"
-                >
-                  <User size={20} />
-                  <span>Đăng nhập</span>
-                </Link>
-              )}
-            </div>
-          </nav>
-
-        </div>
-
-
-        {openMenu && (
-          <div className="lg:hidden border-t border-white/20 bg-primary-500 animate-in slide-in-from-top duration-300">
-            {filteredNav.map((group, index) => (
-              <MobileMenuItem
-                key={index}
-                title={group.title}
-                path={group.path}
-                items={group.categories}
-                onCloseMenu={() => setOpenMenu(false)}
-              />
-            ))}
-
+          <div className="flex hidden lg:block items-center border-l border-white/20 pl-6 ml-2">
             {user ? (
-              <div className="flex items-center gap-2 px-5 py-3 border-b border-white/10 text-white">
-                <User size={18} />
-                <span>{user.username}</span>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1.5 text-sm font-bold text-white bg-white/10 px-3 py-1.5 rounded-lg">
+                  <User size={18} />
+                  <span>{user.username}</span>
+                </div>
               </div>
             ) : (
               <Link
                 href="/dang-nhap"
-                className="flex items-center gap-2 px-5 py-3 border-b border-white/10 hover:bg-white/5 text-white"
+                className="flex items-center gap-1 font-bold hover:text-gray-200 text-white"
               >
-                Đăng nhập
+                <User size={20} />
+                <span>Đăng nhập</span>
               </Link>
             )}
           </div>
-        )}
+        </div>
+        <hr className="h-[0.5px] w-full hidden lg:block bg-gray-200/60" />
+        <nav className="hidden w-full mx-auto bg-primary-700    lg:flex my-1">
+          <div className="flex lg:w-10/12 mx-auto gap-4">
+            {filteredNav.map((group, index) => (
+              <MainDropdown
+                key={index}
+                title={group.title}
+                path={group.path}
+                categories={group.categories}
+                brands={group.brands}
+                popularSearches={group.popularSearches}
+              />
+            ))}
+          </div>
+
+        </nav>
+
+
       </header>
+      {openMenu && (
+        <div className="fixed inset-0 z-[100] w-full h-full bg-primary-600 flex flex-col animate-in fade-in duration-300">
+
+          <div className="flex justify-end p-6">
+            <button
+              onClick={() => setOpenMenu(false)}
+              className="p-3 text-gray-400 hover:text-white transition-all"
+            >
+              <X size={32} />
+            </button>
+          </div>
+
+          <div className="flex-1 flex flex-col   overflow-y-auto">
+            <div className="w-full max-w-2xl text-center space-y-10 animate-in slide-in-from-bottom-5 duration-500">
+              <nav className="flex flex-col gap-8">
+                {filteredNav.map((group, index) => (
+                  <div key={index} className="group">
+                    <MobileMenuItem
+                      title={group.title}
+                      path={group.path}
+                      items={group.categories}
+                      onCloseMenu={() => setOpenMenu(false)}
+                      className="text-3xl md:text-5xl font-bold text-white   transition-colors"
+                    />
+                  </div>
+                ))}
+              </nav>
+
+              <div className="flex flex-col items-center gap-6">
+                {user ? (
+                  <div className="flex items-center gap-3 text-gray-300 text-lg uppercase tracking-widest">
+                    <User size={20} />
+                    <span>{user.username}</span>
+                  </div>
+                ) : (
+                  <Link
+                    href="/dang-nhap"
+                    onClick={() => setOpenMenu(false)}
+                    className="text-xl text-gray-400 hover:text-white transition-colors uppercase tracking-widest"
+                  >
+                    Đăng nhập
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+
+          
+        </div>
+      )}
     </>
   );
 };

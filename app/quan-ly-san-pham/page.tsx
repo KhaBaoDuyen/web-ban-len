@@ -69,7 +69,7 @@ export default function QuanLySanPham() {
 
 
     return (
-        <div className="min-h-screen bg-white p-4 md:p-8">
+        <div className="min-h-screen  p-4 md:p-8">
             <Toaster position="top-center" reverseOrder={false} />
             <div className="max-w-7xl mx-auto">
 
@@ -89,7 +89,7 @@ export default function QuanLySanPham() {
                     </button>
                 </div>
 
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div className="hidden lg:block bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-[700px] border-collapse">
                             <thead className="bg-slate-50/50 border-b border-slate-200">
@@ -176,13 +176,12 @@ export default function QuanLySanPham() {
                     </div>
                 </div>
 
-                {/* Mobile view alternative (optional) */}
-                <div className="md:hidden mt-4 space-y-4">
-                    {PRODUCT_DATA.map((product, index) => (
+                 <div className="md:hidden mt-4 space-y-4">
+                    {products.map((product, index) => (
                         <div key={index} className="border rounded-xl shadow-sm p-4 flex justify-between items-start">
                             <div className="flex gap-3">
                                 <img
-                                    src={`/assets/products/${product.image}`}
+                                    src={`${product.image}`}
                                     alt={product.name}
                                     className="w-20 h-20 object-cover rounded-xl"
                                 />

@@ -31,7 +31,7 @@ export const MobileMenuItem = ({
                         onClick={() => setIsExpanded(!isExpanded)}
                         className="flex items-center justify-between w-full px-5 py-3 hover:bg-white/5 transition-colors"
                     >
-                        <span className=" text-sm">{title}</span>
+                        <span className=" text-md">{title}</span>
                         {isExpanded ? (
                             <ChevronUp size={20} className="text-gray-400" />
                         ) : (
@@ -45,7 +45,7 @@ export const MobileMenuItem = ({
                                 <Link
                                     key={i}
                                     href={item.path}
-                                    className="block px-10 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 border-l-2 border-transparent hover:border-accent-600"
+                                    className="block px-10 py-2.5 !text-white hover:text-white hover:bg-white/5 border-l-2 border-transparent hover:border-accent-600"
                                     onClick={onCloseMenu}
                                 >
                                     {item.name}
@@ -57,7 +57,7 @@ export const MobileMenuItem = ({
             ) : (
                  <Link
                     href={path}
-                    className="block px-5 py-3 text-sm hover:text-accent-600 hover:bg-white/5 transition-colors"
+                    className="block px-5 py-3 text-md text-white hover:text-accent-600 hover:bg-white/5 transition-colors"
                     onClick={onCloseMenu}
                 >
                     {title}

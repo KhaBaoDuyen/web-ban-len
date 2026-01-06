@@ -42,9 +42,9 @@ export default function RootLayout({
           <div className={`splash-screen ${fadeOut ? "splash-fade-out" : ""}`}>
             <div className="splash-content">
               <div className="logo-wrapper">
-                <img 
-                  src="/assets/logo-light.png" 
-                  alt="Logo Tiệm Len" 
+                <img
+                  src="/assets/logo-light.png"
+                  alt="Logo Tiệm Len"
                   className="logo-img"
                 />
               </div>
@@ -61,7 +61,9 @@ export default function RootLayout({
         ) : (
           <>
             <Header />
-            {children}
+            <main className="mt-[10%] py-10">
+              {children}
+            </main>
             <ScrollToTop />
           </>
         )}
