@@ -95,9 +95,36 @@ export default function ProductsPage() {
                     </p>
                 </div>
             </section>
-            <div className="grid grid-cols-12 gap-5 lg:w-10/12 w-11/12 mx-auto py-10">
-                <aside className="w-full shadow col-span-3 bg-white rounded-2xl  p-4 h-fit sticky top-24">
+            <div className="lg:grid grid-cols-12 gap-5 lg:w-10/12 w-11/12 mx-auto py-10">
+                <div className="lg:hidden mb-4 overflow-x-auto py-2">
+                    <div className="flex gap-2 w-max px-1">
+                        <button
+                            onClick={() => setSelectedCategory("all")}
+                            className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition
+        ${selectedCategory === "all"
+                                    ? "bg-accent-600 text-white"
+                                    : "bg-slate-100 text-slate-700"
+                                }`}
+                        >
+                            Tất cả
+                        </button>
 
+                        {categories.map((cat) => (
+                            <button
+                                key={cat._id}
+                                onClick={() => setSelectedCategory(cat._id)}
+                                className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition
+          ${selectedCategory === cat._id
+                                        ? "bg-accent-600 text-white"
+                                        : "bg-slate-100 text-slate-700"
+                                    }`}
+                            >
+                                {cat.name}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+                <aside className="hidden lg:block w-full shadow col-span-3 bg-white rounded-2xl p-4 h-fit sticky top-24">
                     <h3 className="font-bold text-lg text-accent-600 mb-4">
                         Danh mục
                     </h3>
@@ -176,7 +203,7 @@ export default function ProductsPage() {
                             </div>
                         ) : products.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-20 text-center">
-                                
+
                                 <h3 className="text-xl font-bold text-slate-700">
                                     Danh mục này chưa có sản phẩm
                                 </h3>
