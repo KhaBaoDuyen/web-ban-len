@@ -112,7 +112,7 @@ export default function ProductDetail() {
                     <div className="lg:col-span-7 space-y-6">
                         <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                             <span className="inline-block px-3 py-1 rounded-full text-[10px] font-bold mb-3 bg-accent-100 text-accent-600 uppercase tracking-widest">
-                                {data.status === 'active' ? 'Còn hàng' : 'Tạm hết hàng'}
+                                {data.status === 1 ? 'Còn hàng' : 'Tạm hết hàng'}
                             </span>
 
                             <h1 className="text-2xl lg:text-3xl font-black text-slate-900 mb-2 leading-tight">{data.name}</h1>
