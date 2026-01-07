@@ -40,8 +40,22 @@ export default function ProductDetail() {
         let valid = true;
         const newErrors = { name: "", phone: "" };
 
-        if (!customerInfo.name.trim()) { newErrors.name = "Họ tên không được để trống"; valid = false; }
-        if (!customerInfo.phone.trim()) { newErrors.phone = "Số điện thoại không được để trống"; valid = false; }
+        if (!customerInfo.name.trim()) {
+            newErrors.name = "Họ tên không được để trống";
+            valid = false;
+        }
+
+        const phone = customerInfo.phone.trim();
+        const phoneRegex = /^0[35789][0-9]{8}$/;
+
+        if (!phone) {
+            newErrors.phone = "Số điện thoại không được để trống";
+            valid = false;
+        } else if (!phoneRegex.test(phone)) {
+            newErrors.phone = "Số điện thoại không hợp lệ (phải là số VN, 10 chữ số, bắt đầu bằng 0)";
+            valid = false;
+        }
+
         setErrors(newErrors);
 
         if (!valid) {
@@ -135,7 +149,14 @@ export default function ProductDetail() {
                                                 placeholder="Họ và tên *"
                                                 className={`w-full pl-10 pr-4 py-2.5 rounded-lg border bg-white outline-none transition ${errors.name ? 'border-red-500' : 'border-slate-200 focus:border-accent-600'}`}
                                                 value={customerInfo.name}
-                                                onChange={(e) => setCustomerInfo({ ...customerInfo, name: e.target.value })}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    setCustomerInfo({ ...customerInfo, name: value });
+                                                    if (value.trim()) {
+                                                        setErrors((prev) => ({ ...prev, name: "" }));
+                                                    }
+                                                }}
+
                                             />
                                         </div>
                                         {errors.name && <p className="text-[11px] text-red-500 ml-1">{errors.name}</p>}
@@ -147,10 +168,23 @@ export default function ProductDetail() {
                                             <input
                                                 type="tel"
                                                 placeholder="Số điện thoại *"
-                                                className={`w-full pl-10 pr-4 py-2.5 rounded-lg border bg-white outline-none transition ${errors.phone ? 'border-red-500' : 'border-slate-200 focus:border-accent-600'}`}
+                                                className={`w-full pl-10 pr-4 py-2.5 rounded-lg border bg-white outline-none transition 
+                                                ${errors.phone ? 'border-red-500' : 'border-slate-200 focus:border-accent-600'}`}
                                                 value={customerInfo.phone}
-                                                onChange={(e) => setCustomerInfo({ ...customerInfo, phone: e.target.value })}
+                                                onChange={(e) => {
+                                                    let value = e.target.value.replace(/\D/g, "");
+                                                    if (value.length > 10) value = value.slice(0, 10);
+
+                                                    setCustomerInfo({ ...customerInfo, phone: value });
+
+                                                    const phoneRegex = /^0[35789][0-9]{8}$/;
+
+                                                    if (phoneRegex.test(value)) {
+                                                        setErrors((prev) => ({ ...prev, phone: "" }));
+                                                    }
+                                                }}
                                             />
+
                                         </div>
                                         {errors.phone && <p className="text-[11px] text-red-500 ml-1">{errors.phone}</p>}
                                     </div>

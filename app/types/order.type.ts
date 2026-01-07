@@ -1,13 +1,20 @@
 export type Order = {
-    id?: string;
-    productId: string;
-    productName: string;
+  _id: string;
+  orderId: string;
+  productName: string;
+  quantity: number;
+  totalAmount: number;
+  customerName: string;
+  customerPhone: string;
+  paymentMethod: string;
+  status: "processing" | "completed" | "cancelled";
+  createdAt: string;
+  createdBy?: string;
+  product?: {
+    name: string;
     price: number;
-    quantity: number;
-    totalAmount: number;
-    customerName: string;
-    customerPhone: string;
-    paymentMethod: 'cod' | 'transfer';
-    status: 'pending' | 'processing' | 'completed' | 'cancelled';
-    createdAt: Date;
+    image: string;
+    slug: string;
+    status: number;
+  };
 };

@@ -105,7 +105,7 @@ export async function POST(request: Request) {
             customerName,
             customerPhone,
             paymentMethod,
-            status: "processing",
+            status: "pending",
             createdAt: new Date(),
             createdBy,
             createdRole: token ? "admin" : "customer"
