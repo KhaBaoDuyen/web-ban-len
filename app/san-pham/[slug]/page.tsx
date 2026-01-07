@@ -20,6 +20,8 @@ export default function ProductDetail() {
     const [quantity, setQuantity] = useState(1);
     const [openDecription, setOpenDecription] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [openConfirm, setOpenConfirm] = useState(false);
+
 
     const [customerInfo, setCustomerInfo] = useState({ name: "", phone: "", paymentMethod: "cod" });
     const [errors, setErrors] = useState({ name: "", phone: "" });
@@ -214,11 +216,12 @@ export default function ProductDetail() {
                                     <button onClick={() => setQuantity(q => q + 1)} className="w-10 h-10 flex items-center justify-center bg-white rounded-lg shadow-sm hover:text-accent-600 transition"><FiPlus /></button>
                                 </div>
                                 <button
-                                    onClick={handleCheckout}
-                                    className="w-full flex-1 h-14 bg-primary-600 text-white font-bold py-2  rounded-xl hover:bg-accent-600 transition shadow-lg shadow-accent-100 uppercase tracking-widest text-sm"
+                                    onClick={() => setOpenConfirm(true)}
+                                    className="w-full flex-1 h-14 bg-primary-600 text-white font-bold py-2 rounded-xl hover:bg-accent-600 transition shadow-lg uppercase tracking-widest text-sm"
                                 >
                                     Đặt hàng ngay
                                 </button>
+
                             </div>
                         </div>
 
@@ -287,6 +290,63 @@ export default function ProductDetail() {
                         </ul>
                     </div>
                 </div>
+                {openConfirm && data && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                        <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 animate-in fade-in zoom-in">
+
+                            <h2 className="text-xl font-black text-slate-800 mb-4 text-center">
+                                Xác nhận đơn hàng
+                            </h2>
+
+                            <div className="space-y-3 text-sm text-slate-700">
+                                <div className="flex justify-between">
+                                    <span>Sản phẩm:</span>
+                                    <b>{data.name}</b>
+                                </div>
+
+                                <div className="flex justify-between">
+                                    <span>Số lượng:</span>
+                                    <b>{quantity}</b>
+                                </div>
+
+                                <div className="flex justify-between">
+                                    <span>Tạm tính:</span>
+                                    <b className="text-accent-600">
+                                        {formatVND(Number(data.price) * quantity)}
+                                    </b>
+                                </div>
+
+                                <hr />
+
+                                <div>
+                                    <p><b>Khách hàng:</b> {customerInfo.name}</p>
+                                    <p><b>SĐT:</b> {customerInfo.phone}</p>
+                                    <p><b>Thanh toán:</b> Thanh toán khi nhận hàng</p>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-3 mt-6">
+                                <button
+                                    onClick={() => setOpenConfirm(false)}
+                                    className="flex-1 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 font-bold"
+                                >
+                                    Huỷ
+                                </button>
+
+                                <button
+                                    onClick={() => {
+                                        setOpenConfirm(false);
+                                        handleCheckout();
+                                    }}
+                                    className="flex-1 py-2.5 rounded-xl bg-primary-600 hover:bg-accent-600 text-white font-bold shadow"
+                                >
+                                    Xác nhận đặt hàng
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
             </main>
         </div>
     );
