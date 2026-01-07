@@ -115,10 +115,10 @@ export default function QuanLySanPham() {
                         </p>
                     </div>
 
-                    <button className="inline-flex items-center justify-center gap-2 bg-accent-600 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-sm active:scale-95">
+                    <div className="inline-flex items-center justify-center gap-2 bg-accent-600 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-sm active:scale-95">
                         <PlusIcon className="w-5 h-5" />
                         <Link href={"/quan-ly-san-pham/them-san-pham"}>Thêm sản phẩm</Link>
-                    </button>
+                    </div>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between mb-6">
                     <div className="relative  w-full sm:w-96">

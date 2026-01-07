@@ -216,7 +216,7 @@ export default function ProductForm({
     };
 
     useEffect(() => {
-        if (!initialData) return;
+        if (mode !== "edit" || !initialData) return;
 
         const rawCategoryId: any = initialData.categoryId;
 
@@ -229,19 +229,20 @@ export default function ProductForm({
                         ? rawCategoryId._id
                         : "";
 
-        setFormData((prev) => ({
-            ...prev,
+        setFormData({
             name: initialData.name ?? "",
             slug: initialData.slug ?? "",
             price: initialData.price ?? "",
+            image: null,
+            imageUrl: initialData.imageUrl ?? null,
             description: initialData.description ?? "",
             status: initialData.status ?? 1,
             categoryId,
-            image: null,
-        }));
+        });
 
         setImagePreview(initialData.imageUrl ?? null);
-    }, [initialData]);
+    }, [mode, initialData]);
+
 
 
 
@@ -275,7 +276,7 @@ export default function ProductForm({
                     </div>
 
                     <form onSubmit={handleSubmit} className="lg:p-8 p-3 space-y-8 lg:grid grid-cols-2 gap-5 ">
-                        <span className="">
+                        <div className="">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
 
                                 <div className="space-y-2">
@@ -404,9 +405,9 @@ export default function ProductForm({
                             >
                                 {loading ? "Đang xử lý..." : submitText}
                             </button>
-                        </span>
+                        </div>
 
-                        <span className="flex flex-col gap-5 mt-5">
+                        <div className="flex flex-col gap-5 mt-5">
                             <div className="space-y-2 ">
                                 <div className="space-y-2">
                                     <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
@@ -471,7 +472,7 @@ export default function ProductForm({
                                 </div>
                             )}
 
-                        </span>
+                        </div>
 
 
                     </form>
