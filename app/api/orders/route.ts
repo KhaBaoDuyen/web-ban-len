@@ -108,6 +108,7 @@ export async function POST(request: Request) {
             status: "pending",
             createdAt: new Date(),
             createdBy,
+            assignedTo: null,
             createdRole: token ? "admin" : "customer"
         };
 

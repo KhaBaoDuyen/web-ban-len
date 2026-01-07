@@ -3,11 +3,16 @@ import { formatVND } from "@/app/utils/formatVND";
 import { formatDate } from "@/app/utils/formatDate";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import { Order } from "@/app/types/order.type";
 
 type OrderDetailModalProps = {
-    order: any;
+    order: Order;
     onClose: () => void;
-    onStatusUpdated: (id: string, status: string) => void;
+    onStatusUpdated: (
+        id: string,
+        status: Order["status"],
+        assignedTo?: string
+    ) => void;
 };
 
 export function OrderDetailModal({
@@ -22,7 +27,7 @@ export function OrderDetailModal({
 
     const isLocked = order.status === "completed" || order.status === "cancelled";
 
-    const handleChangeStatus = async (newStatus: string) => {
+    const handleChangeStatus = async (newStatus: Order["status"]) => {
         if (newStatus === order.status || isLocked) return;
 
         setUpdating(true);
@@ -35,9 +40,10 @@ export function OrderDetailModal({
                 body: JSON.stringify({ status: newStatus }),
             });
 
-            if (!res.ok) throw new Error();
+            const data = await res.json();
+            if (!res.ok) throw new Error(data?.message);
 
-            onStatusUpdated(order._id, newStatus);
+            onStatusUpdated(order._id, data.status, data.assignedTo);
 
             toast.success("Cập nhật trạng thái thành công!", { id: loadingToast });
 
@@ -47,6 +53,29 @@ export function OrderDetailModal({
             setUpdating(false);
         }
     };
+
+    // SET TRANG  
+
+    const getAllowedNextStatus = (status: Order["status"]) => {
+        switch (status) {
+            case "pending":
+                return ["pending", "processing", "cancelled"];
+
+            case "processing":
+                return ["processing", "completed", "cancelled"];
+
+            case "completed":
+                return ["completed"];
+
+            case "cancelled":
+                return ["cancelled"];
+
+            default:
+                return [status];
+        }
+    };
+    const allowedStatus = getAllowedNextStatus(order.status);
+
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
@@ -68,7 +97,14 @@ export function OrderDetailModal({
                         <h3 className="text-sm font-bold text-slate-700 mb-2">Thông tin khách hàng</h3>
                         <p className="flex items-center gap-2 text-sm"><UserIcon className="w-4 h-4" /> {order.customerName}</p>
                         <p className="flex items-center gap-2 text-sm mt-1"><PhoneIcon className="w-4 h-4" /> {order.customerPhone}</p>
-                        <p className="text-xs text-slate-500 mt-1">Người tạo đơn: <b>{order.createdBy}</b></p>
+                        <p className="text-xs text-slate-500 mt-1">
+                            Người tạo đơn: <b>{order.createdBy}</b>
+                        </p>
+                        {order.assignedTo && (
+                            <p className="text-xs text-slate-500 mt-1">
+                                Người xử lý: <b className="text-indigo-600">{order.assignedTo}</b>
+                            </p>
+                        )}
                     </div>
 
                     <div className="bg-slate-50 rounded-xl p-4 flex gap-4">
@@ -84,7 +120,9 @@ export function OrderDetailModal({
                             <div>
                                 <p className="font-bold text-slate-800">{order.product?.name || order.productName}</p>
                                 <p className="text-sm text-slate-500 mt-1">Số lượng: {order.quantity}</p>
-                                <p className="text-sm text-slate-500">Đơn giá: {formatVND(order.product?.price || order.price)}</p>
+                                <p className="text-sm text-slate-500">
+                                    Đơn giá: {formatVND(order.product?.price || order.priceProduct)}
+                                </p>
                             </div>
 
                             <p className="text-base font-bold text-accent-600">
@@ -100,15 +138,27 @@ export function OrderDetailModal({
                             <select
                                 value={order.status}
                                 disabled={isLocked || updating}
-                                onChange={(e) => handleChangeStatus(e.target.value)}
+                                onChange={(e) => handleChangeStatus(e.target.value as Order["status"])}
                                 className={`border rounded-lg px-3 py-2 text-sm font-semibold outline-none 
-                ${isLocked ? "bg-slate-200 cursor-not-allowed" : "focus:ring-2 focus:ring-accent-500"}`}
+    ${isLocked ? "bg-slate-200 cursor-not-allowed" : "focus:ring-2 focus:ring-accent-500"}`}
                             >
-                                <option value="pending">Chờ xử lý</option>
-                                <option value="processing">Đang xử lý</option>
-                                <option value="completed">Hoàn thành</option>
-                                <option value="cancelled">Huỷ đơn</option>
+                                <option value="pending" disabled={!allowedStatus.includes("pending")}>
+                                    Chờ xử lý
+                                </option>
+
+                                <option value="processing" disabled={!allowedStatus.includes("processing")}>
+                                    Đang xử lý
+                                </option>
+
+                                <option value="completed" disabled={!allowedStatus.includes("completed")}>
+                                    Hoàn thành
+                                </option>
+
+                                <option value="cancelled" disabled={!allowedStatus.includes("cancelled")}>
+                                    Huỷ đơn
+                                </option>
                             </select>
+
 
                             {isLocked && (
                                 <p className="text-[11px] text-slate-400 mt-1 italic">

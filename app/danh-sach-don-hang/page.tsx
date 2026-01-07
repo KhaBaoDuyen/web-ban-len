@@ -109,19 +109,68 @@ export default function QuanLyDonHang() {
     };
 
     //PHAN TABS
+    const [search, setSearch] = useState<string>("");
+
     const [activeTab, setActiveTab] = useState<
         "all" | "pending" | "processing" | "completed" | "cancelled"
     >("all");
-    const filteredOrders = activeTab === "all"
-        ? orders
-        : orders.filter(o => o.status === activeTab);
+    const filteredOrders = orders.filter(o => {
+        const matchStatus = activeTab === "all" || o.status === activeTab;
+
+        const keyword = search.trim().toLowerCase();
+
+        const productName = (o.productName || "").toLowerCase();
+        const customerName = (o.customerName || "").toLowerCase();
+        const assignedTo = (o.assignedTo || "").toLowerCase();
+
+        const matchSearch =
+            productName.includes(keyword) ||
+            customerName.includes(keyword) ||
+            assignedTo.includes(keyword);
+
+        return matchStatus && matchSearch;
+    });
+
+    useEffect(() => {
+        setSearch("");
+    }, [activeTab]);
+    // CAP NHAT NGUOI XU LY
+    const receiveOrder = async (order: Order) => {
+        if (order.assignedTo || order.status !== "pending") return;
+
+        const loadingToast = toast.loading("Đang nhận đơn...");
+
+        try {
+            const res = await fetch(`/api/orders/${order._id}/assign`, {
+                method: "PATCH",
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message);
+
+            setOrders((prev: Order[]) =>
+                prev.map(o =>
+                    o._id === order._id
+                        ? { ...o, assignedTo: data.assignedTo, status: "processing" }
+                        : o
+                )
+            );
+
+            toast.success("Nhận đơn thành công!", { id: loadingToast });
+
+        } catch (err: any) {
+            toast.error(err.message || "Nhận đơn thất bại", { id: loadingToast });
+        }
+    };
+
+
 
 
     return (
         <div className="min-h-screen  p-4 md:p-8 font-sans">
 
             <div className="max-w-7xl mx-auto">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 lg:mb-8 mb-4">
                     <div>
                         <h1 className="text-2xl font-bold text-slate-900">Quản lý đơn hàng</h1>
                         <p className="text-slate-500 text-sm mt-1">Tổng cộng {orders.length} đơn hàng trong hệ thống</p>
@@ -134,7 +183,7 @@ export default function QuanLyDonHang() {
                         Làm mới
                     </button>
                 </div>
-                <div className="flex flex-wrap gap-2 mb-6">
+                <div className="flex flex-wrap gap-2 lg:mb-6 mb-3">
                     {[
                         { key: "all", label: `Tất cả (${orders.length})` },
                         { key: "pending", label: `Chờ xử lý (${orders.filter(o => o.status === "pending").length})` },
@@ -146,8 +195,8 @@ export default function QuanLyDonHang() {
                             key={tab.key}
                             onClick={() => setActiveTab(tab.key as any)}
                             className={`px-4 py-2 rounded-xl text-sm font-bold border transition-all
-        ${activeTab === tab.key
-                                    ? "bg-indigo-600 text-white border-indigo-600 shadow"
+                                ${activeTab === tab.key
+                                    ? "bg-primary-600 text-white border-primary-600 shadow"
                                     : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
                                 }`}
                         >
@@ -155,6 +204,18 @@ export default function QuanLyDonHang() {
                         </button>
                     ))}
                 </div>
+
+                <div className="mb-4 flex justify-end">
+                    <div className="relative w-full max-w-sm">
+                        <input
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            placeholder="Tìm theo tên sản phẩm, khách, người xử lý..."
+                            className="w-full border bg-white border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary-500"
+                        />
+                    </div>
+                </div>
+
 
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <div className="overflow-x-auto">
@@ -165,7 +226,7 @@ export default function QuanLyDonHang() {
                                     <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Sản phẩm</th>
                                     <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Số lượng</th>
                                     <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Tổng tiền</th>
-                                    <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Thanh toán</th>
+                                    <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Người xử lý</th>
                                     <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Trạng thái</th>
                                     <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Thao tác</th>
                                 </tr>
@@ -194,7 +255,7 @@ export default function QuanLyDonHang() {
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4">
+                                            <td className="px-6 py-4" onClick={() => setSelectedOrder(order)}>
                                                 <span className="text-sm font-medium text-slate-700 flex items-center gap-2">
                                                     <ShoppingBagIcon className="w-4 h-4 text-indigo-500" />
                                                     {order.productName}
@@ -207,16 +268,34 @@ export default function QuanLyDonHang() {
                                                 <span className="text-sm font-bold text-slate-900">{formatVND(order.totalAmount)}</span>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-slate-500 uppercase border border-slate-200 px-2 py-0.5 rounded bg-slate-50">
-                                                    <CreditCardIcon className="w-3 h-3" />
-                                                    {order.paymentMethod}
-                                                </span>
+                                                {order.assignedTo ? (
+                                                    <span className="text-sm font-bold text-primary-600">
+                                                        {order.assignedTo}
+                                                    </span>
+                                                ) : order.status === "pending" ? (
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            receiveOrder(order);
+                                                        }}
+                                                        className="px-3 py-1.5 rounded-lg text-xs font-bold bg-primary-600 text-white  transition"
+                                                    >
+                                                        Nhận đơn
+                                                    </button>
+                                                ) : (
+                                                    <span className="text-xs italic text-slate-400">
+                                                        Chưa phân công
+                                                    </span>
+                                                )}
                                             </td>
-                                            <td className="px-6 py-4 text-center">
-                                                <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase border ${getStatusStyle(order.status)}`}>
+
+                                            <td className="lg:px-6 text-center py-4">
+                                                <span className={`px-3 py-1 rounded-full w-fit text-[10px] font-bold uppercase border ${getStatusStyle(order.status)}`}>
                                                     {getStatusText(order.status)}
                                                 </span>
                                             </td>
+
+
                                             <td className="px-6 py-4 text-right">
                                                 <div className="flex items-center justify-end gap-2">
 
@@ -257,15 +336,23 @@ export default function QuanLyDonHang() {
                 <OrderDetailModal
                     order={selectedOrder}
                     onClose={() => setSelectedOrder(null)}
-                    onStatusUpdated={(id, status) => {
-                        setOrders((prev: any[]) =>
-                            prev.map(o => o._id === id ? { ...o, status } : o)
+                    onStatusUpdated={(id, status, assignedTo) => {
+                        setOrders((prev: Order[]) =>
+                            prev.map(o =>
+                                o._id === id
+                                    ? { ...o, status, assignedTo: assignedTo ?? o.assignedTo }
+                                    : o
+                            )
                         );
 
-                        setSelectedOrder((prev: any) =>
-                            prev ? { ...prev, status } : prev
+                        setSelectedOrder((prev: Order | null) =>
+                            prev ? { ...prev, status, assignedTo: assignedTo ?? prev.assignedTo } : prev
                         );
+
                     }}
+
+
+
                 />
             )}
 
