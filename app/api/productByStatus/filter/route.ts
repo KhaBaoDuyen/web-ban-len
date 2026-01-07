@@ -1,16 +1,20 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
 import type { Product } from "@/app/types/product.type";
+import { ObjectId } from "mongodb";
 
 export async function GET(req: Request) {
   try {
     const client = await clientPromise;
     const db = client.db();
+
     const url = new URL(req.url);
-    const range = url.searchParams.get("range");  
+    const range = url.searchParams.get("range");
+    const categoryId = url.searchParams.get("categoryId");
 
     let filter: any = { status: 1 };
 
+    //  LỌC THEO GIÁ
     switch (range) {
       case "under50":
         filter.price = { $lt: 50000 };
@@ -22,13 +26,18 @@ export async function GET(req: Request) {
         filter.price = { $gt: 100000 };
         break;
       default:
-        break; 
+        break;
+    }
+
+    //  LỌC THEO DANH MỤC
+    if (categoryId && categoryId !== "all") {
+      filter.categoryId = new ObjectId(categoryId);
     }
 
     const products: Product[] = await db
       .collection<Product>("products")
       .find(filter)
-      .sort({ price: 1 })
+      .sort({ createdAt: -1 })  
       .toArray();
 
     return NextResponse.json(products);

@@ -13,6 +13,7 @@ export default function Home() {
   const [productsNew, setProductsNew] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState<"all" | "under50" | "50to100" | "over100">("all");
+  const [fadeOut, setFadeOut] = useState(false);
 
   //SAN PHAM MOI NHAT 
   const ProductsNew = async () => {
@@ -152,37 +153,58 @@ export default function Home() {
         </span>
       </section>
 
-      <section className="flex flex-col lg:w-10/12 w-11/12 mx-auto font-sans  py-5">
-        <span className="text-center">
+      <section className="flex flex-col lg:w-10/12 w-11/12 mx-auto font-sans py-5">
+        <div className="text-center mb-4">
           <h1 className="font-bold text-3xl text-accent-600">Sản phẩm mới</h1>
           <p className="text-muted">Những sản phẩm mới cập nhật tại đây.</p>
-          <div className="grid grid-cols-5 overflow-x-auto py-2 snap-x snap-mandatory gap-4 scrollbar-hide">
-            {productsNew.map((product, index) => (
-              <ProductCard key={index + 1} {...product} />
-            ))}
-          </div>
-        </span>
+        </div>
+
+        <Swiper
+          modules={[Navigation, Autoplay]}
+          spaceBetween={16}
+          navigation
+          autoplay={{
+            delay: 5000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true
+          }}
+          breakpoints={{
+            0: { slidesPerView: 2 },
+            640: { slidesPerView: 3 },
+            1024: { slidesPerView: 5 },
+          }}
+          className="py-4 !overflow-visible"
+        >
+          {productsNew.map((product) => (
+            <SwiperSlide key={product._id} className=" ">
+              <ProductCard {...product} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </section>
 
+
       <section className="">
-        <div className=" rounded-2xl bg-surface-50 py-16 px-4">
+        <div className=" rounded-2xl bg-surface-50 py-5 px-4">
           <div className="bg-primary-800 text-white py-6 mb-16 rounded-lg">
             <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
               <div className="flex flex-col items-center gap-2">
                 <Leaf size={32} strokeWidth={1} />
-                <span className="text-xs uppercase tracking-widest">Tự nhiên 100%</span>
+                <span className="text-xs p-1 uppercase tracking-widest">Tự nhiên 100%</span>
               </div>
               <div className="flex flex-col items-center gap-2">
                 <Heart size={32} strokeWidth={1} />
-                <span className="text-xs uppercase tracking-widest">An toàn cho da</span>
+                <span className="text-xs p-1 uppercase tracking-widest">An toàn cho da</span>
               </div>
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-2 text-center">
                 <Sun size={32} strokeWidth={1} />
-                <span className="text-xs uppercase tracking-widest">Bền màu tuyệt đối</span>
+                <span className="text-[10px] md:text-xs p-1 uppercase tracking-widest leading-tight">
+                  Giữ form bền lâu
+                </span>
               </div>
               <div className="flex flex-col items-center gap-2">
                 <ShieldCheck size={32} strokeWidth={1} />
-                <span className="text-xs uppercase tracking-widest">Chống xù lông</span>
+                <span className="text-xs p-1 uppercase tracking-widest">Chống xù lông</span>
               </div>
             </div>
           </div>
@@ -194,9 +216,9 @@ export default function Home() {
           </div>
 
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 items-center gap-12">
-             <div className="space-y-16 text-right">
+            <div className="space-y-16 text-center lg:text-right">
               <div>
-                <div className="flex justify-end mb-4">
+                <div className="flex lg:justify-end justify-center mb-4">
                   <div className="p-3 bg-accent-50 text-accent-600 rounded-xl border border-accent-100 shadow-sm">
                     <PackageCheck size={28} strokeWidth={1.5} />
                   </div>
@@ -208,7 +230,7 @@ export default function Home() {
               </div>
 
               <div>
-                <div className="flex justify-end mb-4">
+                <div className="flex lg:justify-end justify-center mb-4">
                   <div className="p-3 bg-accent-50 text-accent-600 rounded-xl border border-accent-100 shadow-sm">
                     <Sparkles size={28} strokeWidth={1.5} />
                   </div>
@@ -220,20 +242,20 @@ export default function Home() {
               </div>
             </div>
 
-             <div className="relative group">
+            <div className="relative group hidden lg:block">
               <div className="absolute -inset-4 bg-accent-100/50 rounded-[40px] blur-2xl group-hover:bg-accent-200/50 transition duration-500"></div>
               <div className="relative aspect-square bg-white rounded-3xl flex items-center justify-center overflow-hidden border-[12px] border-white shadow-2xl">
                 <img
-                  src="/assets/product-wool.jpg"  
+                  src="/assets/product-wool.jpg"
                   alt="Sản phẩm len"
                   className="object-cover w-full h-full transform group-hover:scale-110 transition duration-700"
                 />
               </div>
             </div>
 
-             <div className="space-y-16 text-left">
+            <div className="space-y-16 lg:text-left text-center">
               <div>
-                <div className="flex justify-start mb-4">
+                <div className="flex lg:justify-start justify-center mb-4">
                   <div className="p-3 bg-accent-50 text-accent-600 rounded-xl border border-accent-100 shadow-sm">
                     <Scissors size={28} strokeWidth={1.5} />
                   </div>
@@ -245,7 +267,7 @@ export default function Home() {
               </div>
 
               <div>
-                <div className="flex justify-start mb-4">
+                <div className="flex lg:justify-start justify-center mb-4">
                   <div className="p-3 bg-accent-50 text-accent-600 rounded-xl border border-accent-100 shadow-sm">
                     <Leaf size={28} strokeWidth={1.5} />
                   </div>
@@ -259,6 +281,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+
       <section className="bg-white ">
         <div id="san-pham" className="flex flex-col lg:w-10/12 w-11/12 mx-auto font-sans  py-5">
           <span className="lg:flex justify-between ">
@@ -281,7 +304,34 @@ export default function Home() {
 
 
           {loading ? (
-            <p className="text-center mt-20">Đang tải sản phẩm...</p>
+            <div className={`splash-screen ${fadeOut ? "splash-fade-out" : ""}`}>
+              <div className="splash-content">
+                <div className="logo-wrapper">
+                  <img
+                    src="/assets/logo-light.png"
+                    alt="Logo Tiệm Len"
+                    className="logo-img"
+                  />
+                </div>
+                <div className="loading-container">
+                  <p className="shop-name text-accent-600">
+                    Tiệm Len Handmade
+                  </p>
+                  <div className="progress-bar">
+                    <div className="progress-fill bg-accent-600"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : products.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <h3 className="text-xl font-bold text-slate-700">
+                Chưa có sản phẩm
+              </h3>
+              <p className="text-slate-500 mt-2">
+                Bạn có thể chọn giá khác hoặc xem tất cả sản phẩm.
+              </p>
+            </div>
           ) : (
             <div className="grid lg:grid-cols-5 grid-cols-2 gap-5">
               {products.map((product) => (
