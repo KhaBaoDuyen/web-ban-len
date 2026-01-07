@@ -6,7 +6,7 @@ export async function getActiveProducts(): Promise<Product[]> {
   const db = client.db();
   return db
     .collection<Product>("products")
-    .find({ status: "active" })
+    .find({ status: 1 })
     .sort({ createdAt: -1 })
     .toArray();
 }
