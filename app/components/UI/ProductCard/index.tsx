@@ -14,7 +14,7 @@ export default function ProductCard({
     const imageUrl = image instanceof File ? URL.createObjectURL(image) : (image as unknown as string);
 
     return (
-        <Link href={`/san-pham/${slug}`} className="group  relative rounded-xl bg-white border border-slate-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+        <Link href={`/san-pham/${slug}`} className="group cardproduct relative rounded-xl !bg-white border border-slate-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
             <div className="relative rounded-xl lg:h-[14rem] h-[10rem] overflow-hidden bg-slate-100">
                 <img
                     src={imageUrl || "/placeholder-product.png"}

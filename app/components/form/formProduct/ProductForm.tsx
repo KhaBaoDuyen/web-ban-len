@@ -2,16 +2,22 @@
 import { useState, useEffect } from "react";
 import {
     FiBox, FiLink, FiDollarSign, FiFileText, FiImage,
-    FiX, FiUploadCloud, FiCheckCircle, FiAlertCircle, FiZap
+    FiX, FiUploadCloud, FiCheckCircle, FiAlertCircle, FiZap,
 } from "react-icons/fi";
 import type { Product } from "@/app/types/product.type";
+import type { Category } from "@/app/types/categories.type";
+import Link from "next/link";
 
 
 type Props = {
     initialData?: Partial<Product>;
     title: string;
     submitText: string;
-    onSubmit: (data: FormData) => Promise<boolean>;
+    onSubmit: (data: FormData) => Promise<{
+        ok: boolean;
+        message: string;
+    }>;
+    mode?: "add" | "edit";
 };
 
 export default function ProductForm({
@@ -19,15 +25,19 @@ export default function ProductForm({
     title,
     submitText,
     onSubmit,
+    mode = "add",
 }: Props) {
+
 
     const [formData, setFormData] = useState<Product>({
         name: initialData.name || "",
         slug: initialData.slug || "",
         price: initialData.price || "",
         image: null,
+        imageUrl: initialData.imageUrl || null,
         description: initialData.description || "",
         status: initialData.status || 1,
+        categoryId: initialData.categoryId || "",
     });
 
     const [imagePreview, setImagePreview] = useState<string | null>(
@@ -102,6 +112,10 @@ export default function ProductForm({
             valid = false;
         }
         if (!formData.description) { newErrors.description = "Vui lòng nhập mô tả hoặc tạo bằng AI"; valid = false; }
+        if (!formData.categoryId) {
+            valid = false;
+            alert("Vui lòng chọn danh mục");
+        }
 
         setErrors(newErrors);
         return valid;
@@ -143,6 +157,7 @@ export default function ProductForm({
             image: null,
             description: "",
             status: 1,
+            categoryId: "",
         });
         setImagePreview(null);
         setErrors({ name: "", price: "", image: "", description: "" });
@@ -162,28 +177,27 @@ export default function ProductForm({
             if (!v) return;
 
             if (k === "price") {
-                const numericPrice = Number(
-                    (v as string).replace(/\D/g, "")
-                );
+                const numericPrice = Number((v as string).replace(/\D/g, ""));
                 payload.append("price", String(numericPrice));
             } else {
                 payload.append(k, v as any);
             }
         });
 
-        const ok = await onSubmit(payload);
+        const result = await onSubmit(payload);
 
         setMessage({
-            text: ok ? "Lưu thành công!" : "Có lỗi xảy ra",
-            type: ok ? "success" : "error",
+            text: result.message,
+            type: result.ok ? "success" : "error",
         });
 
         setLoading(false);
-        if (ok) {
+
+        if (result.ok && mode === "add") {
             resetForm();
         }
-    };
 
+    };
 
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const raw = e.target.value.replace(/\D/g, "");
@@ -204,6 +218,17 @@ export default function ProductForm({
     useEffect(() => {
         if (!initialData) return;
 
+        const rawCategoryId: any = initialData.categoryId;
+
+        const categoryId =
+            typeof rawCategoryId === "string"
+                ? rawCategoryId
+                : rawCategoryId?.$oid
+                    ? rawCategoryId.$oid
+                    : rawCategoryId?._id
+                        ? rawCategoryId._id
+                        : "";
+
         setFormData((prev) => ({
             ...prev,
             name: initialData.name ?? "",
@@ -211,20 +236,40 @@ export default function ProductForm({
             price: initialData.price ?? "",
             description: initialData.description ?? "",
             status: initialData.status ?? 1,
+            categoryId,
             image: null,
         }));
 
         setImagePreview(initialData.imageUrl ?? null);
-    }, [initialData?.slug]);
+    }, [initialData]);
 
 
+
+    // HAM LAY DANH MUC 
+    const [categories, setCategories] = useState<Category[]>([]);
+    const fetchCategories = async () => {
+        try {
+            const res = await fetch("/api/categories");
+            const data = await res.json();
+            setCategories(data);
+        } catch (err) {
+            console.error("Lỗi lấy danh mục", err);
+        }
+    };
+    useEffect(() => {
+        fetchCategories();
+    }, []);
 
     return (
-        <div className="min-h-screen  lg:py-12 py-5 px-4">
+        <div className="min-h-screen  lg:py-10 py-5 px-4">
             <div className="lg:w-10/12 mx-auto">
                 <div className="bg-white rounded-xl shadow-xl  overflow-hidden">
 
+
                     <div className="p-8 border-b border-slate-100 bg-white">
+                        <span className="">
+                            <Link href="/quan-ly-san-pham" className="hover:underline font-bold text-primary-600 ">Trở về</Link>
+                        </span>
                         <h2 className="text-2xl font-bold text-primary-600 ">{title}</h2>
                         <p className="text-slate-500 mt-2 font-medium">Hoàn tất các thông tin bên dưới để đăng tải sản phẩm</p>
                     </div>
@@ -314,6 +359,44 @@ export default function ProductForm({
                                     </div>
                                 </div>
                             )}
+                            <div className="space-y-2">
+                                <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
+                                    <FiBox className="text-indigo-600" /> Danh mục <span className="text-red-500">*</span>
+                                </label>
+
+                                <div className="grid grid-cols-2 gap-3">
+                                    {categories.map((cat) => {
+                                        const checked = formData.categoryId === cat._id;
+                                        console.log("FORM:", formData.categoryId);
+                                        console.log("CAT:", cat._id);
+
+                                        return (
+                                            <label
+                                                key={cat._id}
+                                                className={`flex items-center gap-2 p-3 rounded-xl border-2 cursor-pointer transition-all
+          ${checked ? "border-indigo-500 bg-indigo-50" : "border-slate-100 hover:border-indigo-300"}`}
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    name="category"
+                                                    value={cat._id}
+                                                    checked={checked}
+                                                    onChange={() =>
+                                                        setFormData((p) => ({ ...p, categoryId: cat._id }))
+                                                    }
+                                                    className="accent-indigo-600"
+                                                />
+                                                <span className="font-semibold text-slate-700">{cat.name}</span>
+                                            </label>
+                                        );
+                                    })}
+                                </div>
+
+                                {!formData.categoryId && (
+                                    <p className="text-xs text-red-500 font-bold">Vui lòng chọn danh mục</p>
+                                )}
+                            </div>
+
                             <button
                                 type="submit"
                                 disabled={loading}

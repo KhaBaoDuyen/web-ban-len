@@ -14,18 +14,33 @@ export default function EditProductForm() {
     const router = useRouter();
 
     const handleUpdate = async (formData: FormData) => {
-        const res = await fetch(`/api/products/${params.slug}`, {
-            method: "PUT",
-            body: formData,
-        });
+        try {
+            const res = await fetch(`/api/products/${params.slug}`, {
+                method: "PUT",
+                body: formData,
+            });
 
-        if (res.ok) {
-            router.push("/quan-ly-san-pham");
-            router.refresh();
-            return true;
+            const data = await res.json();
+
+            if (!res.ok) {
+                return {
+                    ok: false,
+                    message: data.error || "Cập nhật sản phẩm thất bại",
+                };
+            }
+
+            return {
+                ok: true,
+                message: data.message || "Cập nhật sản phẩm thành công",
+            };
+        } catch (err) {
+            return {
+                ok: false,
+                message: "Không thể kết nối server",
+            };
         }
-        return false;
     };
+
 
     useEffect(() => {
         if (!slug) return;
@@ -51,10 +66,17 @@ export default function EditProductForm() {
                     : data.image instanceof File
                         ? URL.createObjectURL(data.image)
                         : null,
-
                 status: data.status,
+
+                categoryId: typeof data.categoryId === "string"
+                    ? data.categoryId
+                    : (data.categoryId as any)?.$oid
+                        ? (data.categoryId as any).$oid
+                        : String(data.categoryId),
             }}
+            mode="edit"
             onSubmit={handleUpdate}
         />
+
     );
 }

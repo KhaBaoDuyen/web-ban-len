@@ -1,3 +1,5 @@
+import type { Category } from "./categories.type";
+
 export type Product = {
     _id?: string;
     name: string;
@@ -7,5 +9,6 @@ export type Product = {
     imageUrl?: string | null;
     description: string;
     status: 0 | 1;
-
+    categoryId?: string;
+    category?: Category;
 };

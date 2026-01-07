@@ -64,13 +64,16 @@ export default function QuanLySanPham() {
 
     //XOA SAN PHAM
     const [isDeleting, setIsDeleting] = useState(false);
-    const handleDelete = async (slug: string) => {
-        if (isDeleting) return;
-        if (!confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) return;
+    const [openDelete, setOpenDelete] = useState(false);
+    const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+
+
+    const handleDelete = async () => {
+        if (!selectedSlug || isDeleting) return;
 
         setIsDeleting(true);
         try {
-            const res = await fetch(`/api/products/${slug}`, {
+            const res = await fetch(`/api/products/${selectedSlug}`, {
                 method: "DELETE",
             });
 
@@ -78,17 +81,19 @@ export default function QuanLySanPham() {
 
             if (res.ok) {
                 toast.success("Xóa thành công!");
-                setProducts(prev => prev.filter(p => p.slug !== slug));
+                setProducts(prev => prev.filter(p => p.slug !== selectedSlug));
+                setOpenDelete(false);
+                setSelectedSlug(null);
             } else {
                 toast.error(data.message || "Có lỗi xảy ra");
             }
         } catch (error) {
-            console.error("Lỗi khi xóa:", error);
             toast.error("Không thể kết nối đến server");
         } finally {
             setIsDeleting(false);
         }
     };
+
 
     // TIM KIEM SAN PHAM 
     const [search, setSearch] = useState("");
@@ -207,7 +212,10 @@ export default function QuanLySanPham() {
                                                     </Link>
                                                     <button
                                                         type="button"
-                                                        onClick={() => handleDelete(product.slug)}
+                                                        onClick={() => {
+                                                            setSelectedSlug(product.slug);
+                                                            setOpenDelete(true);
+                                                        }}
                                                         disabled={isDeleting}
                                                         className={`p-2 rounded-lg transition-all ${isDeleting
                                                             ? "opacity-50 cursor-not-allowed bg-slate-100"
@@ -251,7 +259,10 @@ export default function QuanLySanPham() {
                                     <PencilSquareIcon className="w-5 h-5" />
                                 </Link>
                                 <button
-                                    onClick={() => handleDelete(product.slug)}
+                                    onClick={() => {
+                                        setSelectedSlug(product.slug);
+                                        setOpenDelete(true);
+                                    }}
                                     disabled={isDeleting}
                                     className={`p-2 rounded-lg transition-all ${isDeleting
                                         ? "opacity-50 cursor-not-allowed bg-slate-100"
@@ -265,6 +276,36 @@ export default function QuanLySanPham() {
                         </div>
                     ))}
                 </div>
+                {openDelete && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+                        <div className="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl animate-in fade-in zoom-in">
+                            <h2 className="text-lg font-bold text-slate-800">
+                                Xác nhận xoá sản phẩm
+                            </h2>
+                            <p className="text-slate-500 mt-2">
+                                Bạn có chắc chắn muốn xoá sản phẩm này không? Hành động này không thể hoàn tác.
+                            </p>
+
+                            <div className="flex justify-end gap-3 mt-6">
+                                <button
+                                    onClick={() => setOpenDelete(false)}
+                                    disabled={isDeleting}
+                                    className="px-4 py-2 rounded-xl border font-semibold text-slate-600 hover:bg-slate-100"
+                                >
+                                    Huỷ
+                                </button>
+
+                                <button
+                                    onClick={handleDelete}
+                                    disabled={isDeleting}
+                                    className="px-4 py-2 rounded-xl bg-red-600 text-white font-semibold hover:bg-red-700 disabled:opacity-50"
+                                >
+                                    {isDeleting ? "Đang xoá..." : "Xoá"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
             </div>
         </div>

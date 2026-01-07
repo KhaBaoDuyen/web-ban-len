@@ -84,12 +84,11 @@ export const Search = ({
           onClick={() => keyword && router.push(`/san-pham?search=${keyword}`)}
           className="bg-primary-700 min-w-max px-4 py-2 rounded text-white ml-2 hover:bg-accent-700"
         >
-          Tìm
+          Tìm kiếm
         </button>
       </div>
 
-      {/* 🔥 BOX GỢI Ý */}
-      {showBox && suggestions.length > 0 && (
+       {showBox && suggestions.length > 0 && (
         <div className="absolute top-full mt-2 w-full bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden z-50">
           {suggestions.map((item) => (
             <div

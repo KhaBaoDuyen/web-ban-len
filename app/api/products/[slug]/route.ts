@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "../../../lib/mongodb";
 import { v2 as cloudinary } from "cloudinary";
+import { ObjectId } from "mongodb";
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -43,34 +44,60 @@ export async function GET(
 }
 
 //CAP NHAT SAN PHAM
+
 export async function PUT(
     req: NextRequest,
-    { params }: { params: Promise<{ slug: string }> }  
+    { params }: { params: Promise<{ slug: string }> }
 ) {
     try {
-         const { slug } = await params; 
- 
+        const { slug } = await params;
+
         const client = await clientPromise;
         const db = client.db("mydatabase");
+        const products = db.collection("products");
 
         const formData = await req.formData();
+
         const name = formData.get("name") as string;
         const newSlug = formData.get("slug") as string;
         const price = formData.get("price") as string;
         const description = formData.get("description") as string;
-        const status = formData.get("status") as string;
+        const status = Number(formData.get("status"));
+        const categoryId = formData.get("categoryId") as string;
         const imageFile = formData.get("image") as File | null;
 
-        const existingProduct = await db.collection("products").findOne({ slug });
-        if (!existingProduct) {
-            return NextResponse.json({ message: "Sản phẩm không tồn tại" }, { status: 404 });
+        if (!name || !newSlug || !price || !description || !categoryId) {
+            return NextResponse.json(
+                { error: "Thiếu dữ liệu bắt buộc" },
+                { status: 400 }
+            );
         }
 
+        const existingProduct = await products.findOne({ slug });
+        if (!existingProduct) {
+            return NextResponse.json(
+                { error: "Sản phẩm không tồn tại" },
+                { status: 404 }
+            );
+        }
+
+        const duplicate = await products.findOne({
+            _id: { $ne: existingProduct._id },
+            $or: [{ name }, { slug: newSlug }],
+        });
+
+        if (duplicate) {
+            return NextResponse.json(
+                { error: "Tên hoặc slug sản phẩm đã tồn tại" },
+                { status: 409 }
+            );
+        }
+
+        // XỬ LÝ ẢNH
         let imageUrl = existingProduct.image;
 
         if (imageFile && imageFile.size > 0) {
-            const arrayBuffer = await imageFile.arrayBuffer();
-            const buffer = Buffer.from(arrayBuffer);
+            const buffer = Buffer.from(await imageFile.arrayBuffer());
 
             const uploadResponse: any = await new Promise((resolve, reject) => {
                 cloudinary.uploader.upload_stream(
@@ -81,9 +108,11 @@ export async function PUT(
                     }
                 ).end(buffer);
             });
+
             imageUrl = uploadResponse.secure_url;
         }
 
+        //   DATA UPDATE
         const updatedData = {
             name,
             slug: newSlug,
@@ -91,20 +120,28 @@ export async function PUT(
             description,
             image: imageUrl,
             status,
+            categoryId: new ObjectId(categoryId),
             updatedAt: new Date(),
         };
 
-         await db.collection("products").updateOne(
-            { slug: slug },
+        await products.updateOne(
+            { _id: existingProduct._id },
             { $set: updatedData }
         );
 
-        return NextResponse.json({ message: "Cập nhật thành công" }, { status: 200 });
-
+        return NextResponse.json(
+            { message: "Cập nhật thành công" },
+            { status: 200 }
+        );
     } catch (error: any) {
-        return NextResponse.json({ message: error.message }, { status: 500 });
+        console.error("UPDATE ERROR:", error);
+        return NextResponse.json(
+            { error: "Có lỗi khi cập nhật sản phẩm" },
+            { status: 500 }
+        );
     }
 }
+
 
 // XOA SAN PHAM
 export async function DELETE(
@@ -117,7 +154,7 @@ export async function DELETE(
         const client = await clientPromise;
         const db = client.db("mydatabase");
 
-         const existingProduct = await db.collection("products").findOne({ slug });
+        const existingProduct = await db.collection("products").findOne({ slug });
 
         if (!existingProduct) {
             return NextResponse.json(
@@ -126,19 +163,19 @@ export async function DELETE(
             );
         }
 
-         if (existingProduct.image) {
+        if (existingProduct.image) {
             try {
                 const urlParts = existingProduct.image.split("/");
                 const fileName = urlParts[urlParts.length - 1].split(".")[0];
-                const publicId = `products/${fileName}`; 
+                const publicId = `products/${fileName}`;
 
                 await cloudinary.uploader.destroy(publicId);
             } catch (cloudErr) {
                 console.error("Lỗi xóa ảnh Cloudinary:", cloudErr);
-             }
+            }
         }
 
-         const result = await db.collection("products").deleteOne({ slug });
+        const result = await db.collection("products").deleteOne({ slug });
 
         if (result.deletedCount === 1) {
             return NextResponse.json(

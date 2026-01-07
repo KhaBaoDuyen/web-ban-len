@@ -2,8 +2,12 @@ import { HeaderGroup } from "./header.type";
 
 export const HeaderData: HeaderGroup[] = [
     {
-        title: "Trang sản phẩm",
+        title: "Trang chủ",
         path: "/",
+    },
+    {
+        title: "Trang sản phẩm",
+        path: "/san-pham",
     },
     {
         title: "Mã thanh toán",

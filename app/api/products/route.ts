@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "../../lib/mongodb";
 import { v2 as cloudinary } from "cloudinary";
+import { ObjectId } from "mongodb";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -12,11 +13,12 @@ cloudinary.config({
 export async function GET() {
   try {
     const client = await clientPromise;
- 
+
     const db = client.db();
     const products = await db
       .collection("products")
       .find({})
+      .sort({ createdAt: -1 })
       .toArray();
 
     return NextResponse.json(products);
@@ -30,6 +32,22 @@ export async function GET() {
 }
 
 //THEM SAN PHAM
+
+function uploadToCloudinary(buffer: Buffer) {
+  return new Promise<any>((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: "products", resource_type: "image" },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      }
+    );
+
+    stream.end(buffer);
+  });
+}
+
+
 export const POST = async (req: NextRequest) => {
   try {
     const formData = await req.formData();
@@ -38,50 +56,49 @@ export const POST = async (req: NextRequest) => {
     const slug = formData.get("slug")?.toString();
     const price = Number(formData.get("price"));
     const description = formData.get("description")?.toString();
-    const status = formData.get("status")?.toString();
+    const status = Number(formData.get("status"));
+    const categoryId = formData.get("categoryId")?.toString();
     const image = formData.get("image") as File;
 
-    if (!name || !slug || !price || !description || !image ||!status)
+    if (!name || !slug || !price || !description || !image || !categoryId) {
       return NextResponse.json({ error: "Thiếu dữ liệu bắt buộc" }, { status: 400 });
+    }
 
-    const arrayBuffer = await image.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    const uploadResult = await cloudinary.uploader.upload_stream(
-      { folder: "products", resource_type: "image" },
-      async (error, result) => {
-        if (error) throw error;
-        return result;
-      }
-    );
+    const client = await clientPromise;
+    const db = client.db("mydatabase");
+    const products = db.collection("products");
 
-    const stream = cloudinary.uploader.upload_stream(
-      { folder: "products", resource_type: "image" },
-      async (error, result) => {
-        if (error) throw error;
+    const exist = await products.findOne({
+      $or: [{ name }, { slug }],
+    });
 
-        const client = await clientPromise;
-        const db = client.db("mydatabase");
-        const products = db.collection("products");
+    if (exist) {
+      return NextResponse.json(
+        { error: "Tên hoặc slug sản phẩm đã tồn tại" },
+        { status: 409 }
+      );
+    }
 
-        const productData = {
-          name,
-          slug,
-          price,
-          description,
-          image: result?.secure_url || "",
-          status,
-          createdAt: new Date(),
-        };
+    const buffer = Buffer.from(await image.arrayBuffer());
+    const uploadResult = await uploadToCloudinary(buffer);
 
-        await products.insertOne(productData);
-      }
-    );
-
-    stream.end(buffer);
+    await products.insertOne({
+      name,
+      slug,
+      price,
+      description,
+      image: uploadResult.secure_url,
+      status,
+      categoryId: new ObjectId(categoryId),
+      createdAt: new Date(),
+    });
 
     return NextResponse.json({ message: "Thêm sản phẩm thành công" });
   } catch (err) {
-    console.error(err);
-    return NextResponse.json({ error: "Có lỗi khi lưu sản phẩm" }, { status: 500 });
+    console.error("UPLOAD ERROR:", err);
+    return NextResponse.json(
+      { error: "Có lỗi khi lưu sản phẩm / upload ảnh" },
+      { status: 500 }
+    );
   }
 };
