@@ -1,78 +1,116 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+
+interface Product {
+  _id?: string;
+  name: string;
+  slug: string;
+  image?: string;
+}
+
 interface SearchProps {
-    width?: string;
-    showOnMobile?: boolean;
+  width?: string;
+  showOnMobile?: boolean;
 }
 
 export const Search = ({
-    width = "lg:w-5/12",
-    showOnMobile = false,
+  width = "lg:w-5/12",
+  showOnMobile = false,
 }: SearchProps) => {
-    return (
-        <div
-            className={`
-        ${showOnMobile ? "flex" : "hidden"}
-        lg:flex
-        ${width}
-        items-center
-        bg-white/20
-        rounded-md
-        px-3
-        pr-0
-        w-full
-      `}
+  const router = useRouter();
+  const [keyword, setKeyword] = useState("");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [suggestions, setSuggestions] = useState<Product[]>([]);
+  const [showBox, setShowBox] = useState(false);
+  const boxRef = useRef<HTMLDivElement>(null);
+
+   useEffect(() => {
+    fetch("/api/productByStatus")
+      .then((res) => res.json())
+      .then((data) => setProducts(data))
+      .catch(() => {});
+  }, []);
+
+   useEffect(() => {
+    if (!keyword.trim()) {
+      setSuggestions([]);
+      return;
+    }
+
+    const k = keyword.toLowerCase();
+
+    const result = products
+      .filter((p) => p.name.toLowerCase().includes(k))
+      .slice(0, 5);
+
+    setSuggestions(result);
+  }, [keyword, products]);
+
+   useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (boxRef.current && !boxRef.current.contains(e.target as Node)) {
+        setShowBox(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSelect = (slug: string) => {
+    setKeyword("");
+    setSuggestions([]);
+    setShowBox(false);
+    router.push(`/san-pham/${slug}`);
+  };
+
+  return (
+    <div ref={boxRef} className={`relative ${showOnMobile ? "flex" : "hidden"} lg:flex ${width}`}>
+      <div className="flex w-full items-center bg-white/20 rounded-md px-3 pr-0">
+        <input
+          type="text"
+          value={keyword}
+          onFocus={() => setShowBox(true)}
+          onChange={(e) => {
+            setKeyword(e.target.value);
+            setShowBox(true);
+          }}
+          className="p-2 w-full bg-transparent placeholder:text-gray-300 outline-none border-none text-white"
+          placeholder="Tìm sản phẩm..."
+        />
+
+        <button
+          onClick={() => keyword && router.push(`/san-pham?search=${keyword}`)}
+          className="bg-primary-700 min-w-max px-4 py-2 rounded text-white ml-2 hover:bg-accent-700"
         >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-gray-300"
+          Tìm
+        </button>
+      </div>
+
+      {/* 🔥 BOX GỢI Ý */}
+      {showBox && suggestions.length > 0 && (
+        <div className="absolute top-full mt-2 w-full bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden z-50">
+          {suggestions.map((item) => (
+            <div
+              key={item.slug}
+              onClick={() => handleSelect(item.slug)}
+              className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-slate-100 transition"
             >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-
-            <input
-                type="text"
-                className="p-2 w-full bg-transparent placeholder:text-gray-300 outline-none border-none text-white"
-                placeholder="Tìm kiếm..."
-            />
-
-            <button
-                className="
-                    bg-primary-700
-                    min-w-max
-                    px-4
-                    py-2
-                    rounded
-                    text-white
-                    ml-2
-                    hover:bg-accent-700
-                    flex
-                    items-center
-                    gap-2
-                "
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 lg:hidden"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                >
-                    <circle cx="11" cy="11" r="8" />
-                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-
-                <span className="hidden lg:inline">Tìm kiếm</span>
-            </button>
-
+              {item.image && (
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-10 h-10 object-cover rounded-lg border"
+                />
+              )}
+              <span className="text-sm text-slate-700 font-medium line-clamp-1">
+                {item.name}
+              </span>
+            </div>
+          ))}
         </div>
-    );
+      )}
+    </div>
+  );
 };
