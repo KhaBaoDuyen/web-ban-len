@@ -17,14 +17,14 @@ export default function ThanhToan() {
         momo: {
             phone: "0337019197",
             name: "KHA THI BAO DUYEN",
-            qr: "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=momo_link_here"
+            qr: "momo.jpg"
         },
         bank: {
             name: "MB Bank",
             number: "0337019197",
             owner: "KHA THI BAO DUYEN",
             branch: "Chi nhánh TP.HCM",
-            qr: "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=bank_transfer_details"
+            qr: "mbbank.jpg"
         }
     };
 
