@@ -7,7 +7,8 @@ import { Header } from "./components/layout/header/header";
 import { useState, useEffect } from "react";
 import logo from "../public/assets/logo-light.png";
 import { ScrollToTop } from "./components/UI/ScrollToTop";
- 
+
+ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 

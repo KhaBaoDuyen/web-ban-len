@@ -5,7 +5,7 @@
   border: 2px solid $accent-50;
   border-radius: 9999px;
   background: transparent;
-  color: $accent-50;
+  color: $primary-50 !important;
   transition: all 0.3s ease;
   padding: 10px;
 }
@@ -18,9 +18,9 @@
 
 .swiper-button-next:hover,
 .swiper-button-prev:hover {
-  border-color: $accent-400;
-  color: $accent-50;
-  background: $accent-400;
+  border-color: $primary-400 !important;
+  color: $primary-100 !important;
+  background: $primary-600;
 }
 .swiper-slide .cardproduct{
   background: white !important;

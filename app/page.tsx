@@ -159,28 +159,31 @@ export default function Home() {
           <p className="text-muted">Những sản phẩm mới cập nhật tại đây.</p>
         </div>
 
-        <Swiper
-          modules={[Navigation, Autoplay]}
-          spaceBetween={16}
-          navigation
-          autoplay={{
-            delay: 5000,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: true
-          }}
-          breakpoints={{
-            0: { slidesPerView: 2 },
-            640: { slidesPerView: 3 },
-            1024: { slidesPerView: 5 },
-          }}
-          className="py-4 !overflow-visible"
-        >
-          {productsNew.map((product) => (
-            <SwiperSlide key={product._id} className="py-3">
-              <ProductCard {...product} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <div className="">
+          <Swiper
+            modules={[Navigation, Autoplay]}
+            spaceBetween={16}
+            navigation
+            autoplay={{
+              delay: 5000,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true
+            }}
+            breakpoints={{
+              0: { slidesPerView: 2 },
+              640: { slidesPerView: 3 },
+              1024: { slidesPerView: 5 },
+            }}
+            className="py-5"
+          >
+            {productsNew.map((product) => (
+              <SwiperSlide key={product._id} className="!w-[220px] py-3">
+                <ProductCard {...product} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
       </section>
 
 
