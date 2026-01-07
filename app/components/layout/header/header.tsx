@@ -15,14 +15,33 @@ import { MobileMenuItem } from "../../../components/UI/Mobile/MobileMenuItem/Mob
 
 export const Header = () => {
   const [openMenu, setOpenMenu] = useState(false);
-  const [user, setUser] = useState<{ username: string } | null>(null);
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchUser = async () => {
+    try {
+      const res = await fetch("/api/auth/me", {
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setUser(data.user);
+      } else {
+        setUser(null);
+      }
+    } catch {
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    fetch("/api/auth/me", { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => setUser(data.user))
-      .catch(() => setUser(null));
+    fetchUser();
   }, []);
+
+  if (loading) return null;
 
   const filteredNav = HeaderData.filter((item) => {
     const privatePaths = ["/quan-ly-san-pham", "/danh-sach-don-hang"];
@@ -31,6 +50,7 @@ export const Header = () => {
     }
     return true;
   });
+  
   return (
     <>
 
@@ -74,7 +94,7 @@ export const Header = () => {
             )}
           </div>
         </div>
-         <nav className="hidden w-full mx-auto bg-primary-700    lg:flex my-1">
+        <nav className="hidden w-full mx-auto bg-primary-700    lg:flex my-1">
           <div className="flex lg:w-10/12 mx-auto gap-4">
             {filteredNav.map((group, index) => (
               <MainDropdown
@@ -138,7 +158,7 @@ export const Header = () => {
             </div>
           </div>
 
-          
+
         </div>
       )}
     </>

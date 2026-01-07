@@ -7,7 +7,7 @@ export async function GET() {
         const db = client.db();
         const products = await db
             .collection("products")
-            .find({ status: "active" })
+            .find({ status: 1 })
             .sort({ createdAt: -1 })
             .toArray();
 

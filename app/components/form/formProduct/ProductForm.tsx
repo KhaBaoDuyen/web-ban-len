@@ -27,7 +27,7 @@ export default function ProductForm({
         price: initialData.price || "",
         image: null,
         description: initialData.description || "",
-        status: initialData.status || "active",
+        status: initialData.status || 1,
     });
 
     const [imagePreview, setImagePreview] = useState<string | null>(
@@ -109,6 +109,8 @@ export default function ProductForm({
 
 
     //TAO MO TA VOI AI
+    const [aiKeyword, setAiKeyword] = useState("");
+
     const handleGenerateAI = async () => {
         if (!formData.name.trim()) {
             setErrors((p) => ({ ...p, name: "Nhập tên trước khi tạo AI" }));
@@ -119,7 +121,11 @@ export default function ProductForm({
             const res = await fetch("/api/generate-description", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ prompt: `Viết mô tả cho ${formData.name}` }),
+                body: JSON.stringify({
+                    name: formData.name,
+                    keywords: aiKeyword,
+                }),
+
             });
             const data = await res.json();
             if (data.text) setFormData((p) => ({ ...p, description: data.text }));
@@ -136,7 +142,7 @@ export default function ProductForm({
             price: "",
             image: null,
             description: "",
-            status: "active",
+            status: 1,
         });
         setImagePreview(null);
         setErrors({ name: "", price: "", image: "", description: "" });
@@ -204,7 +210,7 @@ export default function ProductForm({
             slug: initialData.slug ?? "",
             price: initialData.price ?? "",
             description: initialData.description ?? "",
-            status: initialData.status ?? "active",
+            status: initialData.status ?? 1,
             image: null,
         }));
 
@@ -214,8 +220,8 @@ export default function ProductForm({
 
 
     return (
-        <div className="min-h-screen bg-slate-50 py-12 px-4">
-            <div className="lg:w-10/12 w-11/12 mx-auto">
+        <div className="min-h-screen  lg:py-12 py-5 px-4">
+            <div className="lg:w-10/12 mx-auto">
                 <div className="bg-white rounded-xl shadow-xl  overflow-hidden">
 
                     <div className="p-8 border-b border-slate-100 bg-white">
@@ -223,7 +229,7 @@ export default function ProductForm({
                         <p className="text-slate-500 mt-2 font-medium">Hoàn tất các thông tin bên dưới để đăng tải sản phẩm</p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="p-8 space-y-8 lg:grid grid-cols-2 gap-5 ">
+                    <form onSubmit={handleSubmit} className="lg:p-8 p-3 space-y-8 lg:grid grid-cols-2 gap-5 ">
                         <span className="">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
 
@@ -329,12 +335,12 @@ export default function ProductForm({
                                         onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
                                         className="w-full px-4 py-3 rounded-xl border-2 border-slate-100 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 outline-none transition-all font-medium bg-white"
                                     >
-                                        <option value="active">Đang bán (Hiển thị)</option>
-                                        <option value="inactive">Tạm ngưng (Ẩn)</option>
+                                        <option value="1">Đang bán (Hiển thị)</option>
+                                        <option value="0">Tạm ngưng (Ẩn)</option>
                                     </select>
                                 </div>
 
-                                <span className="flex justify-between">
+                                <span className="flex lg:flex-row flex-col gap-3 justify-between">
                                     <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
                                         <FiFileText className="text-indigo-600" /> Mô tả sản phẩm
                                     </label>
@@ -347,6 +353,18 @@ export default function ProductForm({
                                         {aiLoading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><FiZap />Tạo mô tả với AI</>}
                                     </button>
                                 </span>
+                                <div className="space-y-2">
+                                    <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
+                                        <FiZap className="text-yellow-500" /> Từ khóa mô tả (cho AI)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={aiKeyword}
+                                        onChange={(e) => setAiKeyword(e.target.value)}
+                                        placeholder="Ví dụ: thổ cẩm, thủ công, quà tặng, trang trí nhà cửa, vintage..."
+                                        className="w-full px-4 py-3 rounded-xl border-2 border-slate-100 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 outline-none transition-all font-medium bg-white"
+                                    />
+                                </div>
 
                                 <div className=" gap-2">
                                     <textarea

@@ -158,11 +158,11 @@ export default function ProductDetail() {
 
                                 <div className="space-y-2">
                                     <p className="text-sm font-bold text-slate-700">Hình thức thanh toán:</p>
-                                    <div className="grid grid-cols-2 gap-3">
+                                    <div className="  gap-3">
                                         <label className={`lg:flex items-center gap-2 p-3 rounded-lg border cursor-pointer transition ${customerInfo.paymentMethod === 'cod' ? 'border-accent-600 bg-accent-50' : 'border-slate-200 bg-white hover:border-accent-300'}`}>
                                             <input type="radio" name="payment" className="hidden" onChange={() => setCustomerInfo({ ...customerInfo, paymentMethod: 'cod' })} />
                                             <FiPackage className={customerInfo.paymentMethod === 'cod' ? 'text-accent-600' : 'text-slate-400'} />
-                                            <span className={`text-sm font-bold ${customerInfo.paymentMethod === 'cod' ? 'text-accent-600' : 'text-slate-600'}`}>Khi nhận hàng</span>
+                                            <span className={`text-sm font-bold ${customerInfo.paymentMethod === 'cod' ? 'text-accent-600' : 'text-slate-600'}`}>Thanh toán khi nhận hàng</span>
                                         </label>
                                         {/* <label className={`lg:flex items-center gap-2 p-3 rounded-lg border cursor-pointer transition ${customerInfo.paymentMethod === 'transfer' ? 'border-accent-600 bg-accent-50' : 'border-slate-200 bg-white hover:border-accent-300'}`}>
                                             <input type="radio" name="payment" className="hidden" onChange={() => setCustomerInfo({ ...customerInfo, paymentMethod: 'transfer' })} />

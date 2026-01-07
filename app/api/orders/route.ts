@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     try {
         const body = await request.json();
         const client = await clientPromise;
-        const db = client.db(); // Tên database mặc định trong connection string
+        const db = client.db();  
 
         const {
             productId,
@@ -47,16 +47,14 @@ export async function POST(request: Request) {
             paymentMethod
         } = body;
 
-        // 1. Kiểm tra dữ liệu đầu vào (Validation)
-        if (!productId || !productName || !customerName || !customerPhone || !paymentMethod) {
+         if (!productId || !productName || !customerName || !customerPhone || !paymentMethod) {
             return NextResponse.json(
                 { message: "Thiếu thông tin: Vui lòng kiểm tra lại tên SP hoặc phương thức thanh toán" },
                 { status: 400 }
             );
         }
 
-        // 2. Chuẩn bị dữ liệu sạch
-        const newOrder = {
+         const newOrder = {
             orderId: `ORD-${Date.now()}`,
             productId,
             productName,
@@ -65,12 +63,11 @@ export async function POST(request: Request) {
             customerName,
             customerPhone,
             paymentMethod,
-            status: "pending",
-            createdAt: new Date() // Driver dùng được đối tượng Date thật
+            status: "processing",
+            createdAt: new Date()  
         };
 
-        // 3. LƯU VÀO DB BẰNG INSERT_ONE (Cách của Driver)
-        const result = await db.collection("orders").insertOne(newOrder);
+         const result = await db.collection("orders").insertOne(newOrder);
 
         if (result.acknowledged) {
             return NextResponse.json(

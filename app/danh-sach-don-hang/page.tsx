@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { formatVND } from "../utils/formatVND";
-import { 
-    ShoppingBagIcon, 
-    UserIcon, 
-    PhoneIcon, 
+import {
+    ShoppingBagIcon,
+    UserIcon,
+    PhoneIcon,
     CreditCardIcon,
     TrashIcon,
     ArrowPathIcon
@@ -34,7 +34,6 @@ export default function QuanLyDonHang() {
 
     const getStatusStyle = (status: string) => {
         switch (status) {
-            case 'pending': return 'bg-amber-100 text-amber-700 border-amber-200';
             case 'processing': return 'bg-blue-100 text-blue-700 border-blue-200';
             case 'completed': return 'bg-green-100 text-green-700 border-green-200';
             case 'cancelled': return 'bg-red-100 text-red-700 border-red-200';
@@ -44,7 +43,6 @@ export default function QuanLyDonHang() {
 
     const getStatusText = (status: string) => {
         switch (status) {
-            case 'pending': return 'Chờ duyệt';
             case 'processing': return 'Đang xử lý';
             case 'completed': return 'Hoàn thành';
             case 'cancelled': return 'Đã hủy';
@@ -53,14 +51,14 @@ export default function QuanLyDonHang() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans">
+        <div className="min-h-screen  p-4 md:p-8 font-sans">
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                     <div>
                         <h1 className="text-2xl font-bold text-slate-900">Quản lý đơn hàng</h1>
                         <p className="text-slate-500 text-sm mt-1">Tổng cộng {orders.length} đơn hàng trong hệ thống</p>
                     </div>
-                    <button 
+                    <button
                         onClick={getAllOrder}
                         className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm hover:bg-slate-50 transition-all text-sm font-semibold text-slate-700"
                     >

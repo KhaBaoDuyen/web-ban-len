@@ -13,7 +13,7 @@ export default function Home() {
   const fetchProducts = async (range: string) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/products/filter?range=${range}`);
+      const res = await fetch(`/api/productByStatus/filter?range=${range}`);
       const data = await res.json();
       setProducts(data);
     } catch (err) {

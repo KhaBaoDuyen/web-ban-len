@@ -9,7 +9,7 @@ export async function GET(req: Request) {
     const url = new URL(req.url);
     const range = url.searchParams.get("range");  
 
-    let filter: any = { status: "active" };
+    let filter: any = { status: 1 };
 
     switch (range) {
       case "under50":
