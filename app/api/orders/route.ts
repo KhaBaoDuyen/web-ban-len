@@ -1,8 +1,11 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "../../lib/mongodb";
+import { ObjectId } from "mongodb";
 import { Order } from "@/app/models/Order.,model";
 import { v2 as cloudinary } from "cloudinary";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/app/lib/auth";
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -15,14 +18,40 @@ export async function GET() {
         const client = await clientPromise;
         const db = client.db();
 
-         const orders = await db
-            .collection("orders")
-            .find({})
-            .sort({ createdAt: -1 }) 
-            .toArray();
+        const orders = await db.collection("orders").aggregate([
+            {
+                $lookup: {
+                    from: "products",
+                    let: { pid: "$productId" },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ["$_id", "$$pid"] } } },
+                        {
+                            $project: {
+                                _id: 1,
+                                name: 1,
+                                price: 1,
+                                image: 1,
+                                slug: 1,
+                                status: 1,
+                            }
+                        }
+                    ],
+                    as: "product"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$product",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $sort: { createdAt: -1 }
+            }
+        ]).toArray();
 
         return NextResponse.json(orders, { status: 200 });
-    } catch (error: any) {
+    } catch (error) {
         console.error("Lỗi GET orders:", error);
         return NextResponse.json(
             { message: "Không thể lấy danh sách đơn hàng" },
@@ -30,12 +59,12 @@ export async function GET() {
         );
     }
 }
-
+//THEM DON HANG
 export async function POST(request: Request) {
     try {
         const body = await request.json();
         const client = await clientPromise;
-        const db = client.db();  
+        const db = client.db();
 
         const {
             productId,
@@ -47,27 +76,42 @@ export async function POST(request: Request) {
             paymentMethod
         } = body;
 
-         if (!productId || !productName || !customerName || !customerPhone || !paymentMethod) {
+        if (!productId || !productName || !customerName || !customerPhone || !paymentMethod) {
             return NextResponse.json(
-                { message: "Thiếu thông tin: Vui lòng kiểm tra lại tên SP hoặc phương thức thanh toán" },
+                { message: "Thiếu thông tin: Vui lòng kiểm tra lại" },
                 { status: 400 }
             );
         }
 
-         const newOrder = {
+        const cookieStore = await cookies();
+        const token = cookieStore.get("auth_session")?.value;
+
+        let createdBy = `khach-hang: ${customerName}`;
+
+        if (token) {
+            const user = verifyToken(token);
+            if (user?.username) {
+                createdBy = `admin: ${user.username}`;
+            }
+        }
+
+        const newOrder = {
             orderId: `ORD-${Date.now()}`,
-            productId,
+            productId: new ObjectId(productId),
             productName,
+            price: Number(price),
             quantity: Number(quantity),
             totalAmount: Number(price) * Number(quantity),
             customerName,
             customerPhone,
             paymentMethod,
             status: "processing",
-            createdAt: new Date()  
+            createdAt: new Date(),
+            createdBy,
+            createdRole: token ? "admin" : "customer"
         };
 
-         const result = await db.collection("orders").insertOne(newOrder);
+        const result = await db.collection("orders").insertOne(newOrder);
 
         if (result.acknowledged) {
             return NextResponse.json(
