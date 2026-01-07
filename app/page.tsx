@@ -176,7 +176,7 @@ export default function Home() {
           className="py-4 !overflow-visible"
         >
           {productsNew.map((product) => (
-            <SwiperSlide key={product._id} className=" ">
+            <SwiperSlide key={product._id} className="py-3">
               <ProductCard {...product} />
             </SwiperSlide>
           ))}
