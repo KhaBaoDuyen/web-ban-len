@@ -106,7 +106,7 @@ export default function QuanLySanPham() {
             <div className="max-w-7xl mx-auto">
 
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-1">
-                    <div className="sticky top-10">
+                    <div className="">
                         <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
                             Quản lý kho hàng
                         </h1>
@@ -120,14 +120,14 @@ export default function QuanLySanPham() {
                         <Link href={"/quan-ly-san-pham/them-san-pham"}>Thêm sản phẩm</Link>
                     </div>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between mb-6">
+                <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between mt-3 mb-6">
                     <div className="relative  w-full sm:w-96">
                         <input
                             type="text"
                             placeholder="Tìm kiếm theo tên sản phẩm..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full px-4 py-2.5 bg-primary-100 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 outline-none transition-all"
+                            className="w-full px-4 py-2.5 shadow bg-white rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 outline-none transition-all"
                         />
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +164,7 @@ export default function QuanLySanPham() {
                                 ) : (
                                     filterProducts.map((product, index) => (
                                         <tr key={index} className="hover:bg-slate-50/80 transition-colors group">
-                                            <td className="px-6 text-center py-4  ">
+                                            <td className="px-6 text-center py-4 max-w-md ">
                                                 <div className="flex items-center gap-4">
                                                     <div className="relative w-40 h-40 rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
                                                         <img

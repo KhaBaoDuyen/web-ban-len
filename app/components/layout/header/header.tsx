@@ -54,7 +54,7 @@ export const Header = () => {
   return (
     <>
 
-      <header className=" w-full z-50 bg-primary-500 text-white flex flex-col justify-center items-start shadow-xl">
+      <header className="sticky top-0 w-full z-50 bg-primary-500 text-white flex flex-col justify-center items-start shadow-xl">
         <div className="mx-auto flex  w-11/12 lg:w-10/12 items-center justify-between lg:py-4">
           <div className="flex lg:hidden rounded-md bg-surface-100 items-center">
             <button

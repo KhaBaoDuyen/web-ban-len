@@ -21,4 +21,8 @@ export const HeaderData: HeaderGroup[] = [
         title: "Danh sách đơn hàng",
         path: "/danh-sach-don-hang",
     },
+    {
+        title: "Danh sách nguyên liệu",
+        path: "/nguyen-lieu-nhap",
+    },
 ];
