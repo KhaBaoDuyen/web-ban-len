@@ -403,7 +403,7 @@ export default function ProductForm({
                                 disabled={loading}
                                 className="w-full py-3 hidden lg:block rounded-xl mt-5 font-bold text-lg text-white bg-accent-600"
                             >
-                                {loading ? "Đang xử lý..." : submitText}
+                                {loading ? "Đang móc..." : submitText}
                             </button>
                         </div>
 
@@ -467,7 +467,7 @@ export default function ProductForm({
                                     disabled={loading}
                                     className="w-full py-3 block lg:hidden rounded-xl mt-5 font-bold text-lg text-white bg-accent-600"
                                 >
-                                    {loading ? "Đang xử lý..." : submitText}
+                                    {loading ? "Đang móc..." : submitText}
                                 </button>
                             </div>
 

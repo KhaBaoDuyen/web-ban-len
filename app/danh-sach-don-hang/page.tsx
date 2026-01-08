@@ -60,10 +60,10 @@ export default function QuanLyDonHang() {
     const getStatusText = (status: string) => {
         switch (status) {
             case 'pending':
-                return 'Chờ xử lý';
+                return 'Chưa móc';
 
             case 'processing':
-                return 'Đang xử lý';
+                return 'Đang móc';
 
             case 'completed':
                 return 'Hoàn thành';
@@ -78,18 +78,16 @@ export default function QuanLyDonHang() {
 
 
     // HUY DON HANG
-    const cancelOrder = async (order: Order) => {
-        if (order.status !== "processing") {
-            toast.error("Chỉ có thể huỷ đơn đang xử lý");
-            return;
-        }
+    const [openCancelModal, setOpenCancelModal] = useState(false);
+    const [selectedOrderCancel, setSelectedOrderCancel] = useState<Order | null>(null);
 
-        if (!confirm("Bạn có chắc chắn muốn huỷ đơn hàng này không?")) return;
+    const confirmCancelOrder = async () => {
+        if (!selectedOrder) return;
 
         const loadingToast = toast.loading("Đang huỷ đơn hàng...");
 
         try {
-            const res = await fetch(`/api/orders/${order._id}/status`, {
+            const res = await fetch(`/api/orders/${selectedOrder._id}/status`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status: "cancelled" }),
@@ -98,15 +96,21 @@ export default function QuanLyDonHang() {
             if (!res.ok) throw new Error();
 
             setOrders(prev =>
-                prev.map(o => o._id === order._id ? { ...o, status: "cancelled" } : o)
+                prev.map(o =>
+                    o._id === selectedOrder._id ? { ...o, status: "cancelled" } : o
+                )
             );
 
             toast.success("Huỷ đơn thành công!", { id: loadingToast });
+            setOpenCancelModal(false);
+            setSelectedOrder(null);
 
         } catch {
             toast.error("Huỷ đơn thất bại!", { id: loadingToast });
         }
     };
+
+
 
     //PHAN TABS
     const [search, setSearch] = useState<string>("");
@@ -183,36 +187,39 @@ export default function QuanLyDonHang() {
                         Làm mới
                     </button>
                 </div>
-                <div className="flex flex-wrap gap-2 lg:mb-6 mb-3">
-                    {[
-                        { key: "all", label: `Tất cả (${orders.length})` },
-                        { key: "pending", label: `Chờ xử lý (${orders.filter(o => o.status === "pending").length})` },
-                        { key: "processing", label: `Đang xử lý (${orders.filter(o => o.status === "processing").length})` },
-                        { key: "completed", label: `Hoàn thành (${orders.filter(o => o.status === "completed").length})` },
-                        { key: "cancelled", label: `Đã huỷ (${orders.filter(o => o.status === "cancelled").length})` },
-                    ].map(tab => (
-                        <button
-                            key={tab.key}
-                            onClick={() => setActiveTab(tab.key as any)}
-                            className={`px-4 py-2 rounded-xl text-sm font-bold border transition-all
+                <div className="lg:flex justify-between items-center ">
+                    <div className="flex flex-wrap gap-2 lg:mb-6 mb-3">
+                        {[
+                            { key: "all", label: `Tất cả (${orders.length})` },
+                            { key: "pending", label: `Chưa móc (${orders.filter(o => o.status === "pending").length})` },
+                            { key: "processing", label: `Đang móc (${orders.filter(o => o.status === "processing").length})` },
+                            { key: "completed", label: `Hoàn thành (${orders.filter(o => o.status === "completed").length})` },
+                            { key: "cancelled", label: `Đã huỷ (${orders.filter(o => o.status === "cancelled").length})` },
+                        ].map(tab => (
+                            <button
+                                key={tab.key}
+                                onClick={() => setActiveTab(tab.key as any)}
+                                className={`px-4 py-2 rounded-xl text-sm font-bold border transition-all
                                 ${activeTab === tab.key
-                                    ? "bg-primary-600 text-white border-primary-600 shadow"
-                                    : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
-                                }`}
-                        >
-                            {tab.label}
-                        </button>
-                    ))}
-                </div>
+                                        ? "bg-primary-600 text-white border-primary-600 shadow"
+                                        : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                                    }`}
+                            >
+                                {tab.label}
+                            </button>
+                        ))}
 
-                <div className="mb-4 flex justify-end">
-                    <div className="relative w-full max-w-sm">
-                        <input
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Tìm theo tên sản phẩm, khách, người xử lý..."
-                            className="w-full border bg-white border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary-500"
-                        />
+                    </div>
+
+                    <div className="mb-4 flex justify-end">
+                        <div className="relative w-full lg:min-w-md">
+                            <input
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                placeholder="Tìm theo tên sản phẩm, khách, người xử lý..."
+                                className="w-full border bg-white border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary-500"
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -240,10 +247,11 @@ export default function QuanLyDonHang() {
                                     filteredOrders.map((order: any) => (
                                         <tr
                                             key={order._id}
-                                            className="hover:bg-slate-50/50 transition-colors cursor-pointer group"
-                                        >
-
-                                            <td className="px-6 py-4">
+                                            className="hover:bg-slate-50/50 transition-colors cursor-pointer group" >
+                                            <td className="px-6 py-4" onClick={(e) => {
+                                                e.stopPropagation();
+                                                setSelectedOrder(order);
+                                            }} >
                                                 <div className="flex flex-col">
                                                     <span className="text-sm font-bold text-slate-900 flex items-center gap-1">
                                                         <UserIcon className="w-3.5 h-3.5 text-slate-400" />
@@ -255,7 +263,11 @@ export default function QuanLyDonHang() {
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4" onClick={() => setSelectedOrder(order)}>
+                                            <td className="px-6 py-4" onClick={(e) => {
+                                                e.stopPropagation();
+                                                setSelectedOrder(order);
+                                            }}
+                                            >
                                                 <span className="text-sm font-medium text-slate-700 flex items-center gap-2">
                                                     <ShoppingBagIcon className="w-4 h-4 text-indigo-500" />
                                                     {order.productName}
@@ -296,11 +308,15 @@ export default function QuanLyDonHang() {
                                             </td>
 
 
-                                            <td className="px-6 py-4 text-right">
+                                            <td className="px-6 py-4 text-right" >
                                                 <div className="flex items-center justify-end gap-2">
 
                                                     <button
-                                                        onClick={() => setSelectedOrder(order)}
+                                                        type="button"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setSelectedOrder(order);
+                                                        }}
                                                         className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
                                                         title="Xem chi tiết"
                                                     >
@@ -308,17 +324,21 @@ export default function QuanLyDonHang() {
                                                     </button>
 
                                                     <button
-                                                        onClick={() => cancelOrder(order)}
-                                                        disabled={order.status !== "processing"}
+                                                        onClick={() => {
+                                                            setOpenCancelModal(true);
+                                                        }}
+
+                                                        disabled={order.status === "completed" || order.status === "cancelled"}
                                                         className={`p-2 rounded-lg transition-all
-        ${order.status !== "processing"
+    ${order.status === "completed" || order.status === "cancelled"
                                                                 ? "text-slate-300 cursor-not-allowed"
                                                                 : "text-slate-400 hover:text-red-600 hover:bg-red-50"}
-      `}
+  `}
                                                         title="Huỷ đơn"
                                                     >
                                                         <TrashIcon className="w-5 h-5" />
                                                     </button>
+
 
                                                 </div>
                                             </td>
@@ -356,6 +376,49 @@ export default function QuanLyDonHang() {
                 />
             )}
 
+            {openCancelModal && selectedOrderCancel && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+                    <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 animate-in fade-in zoom-in">
+
+                        <h2 className="text-lg font-bold text-slate-800 mb-2 text-center">
+                            Xác nhận huỷ đơn
+                        </h2>
+
+                        <p className="text-sm text-slate-600 text-center mb-4">
+                            Bạn có chắc chắn muốn huỷ đơn <b>{selectedOrderCancel.orderId}</b> không?
+                            <br />
+                            Hành động này không thể hoàn tác.
+                        </p>
+
+                        <div className="bg-slate-50 rounded-xl p-3 text-sm mb-4">
+                            <p><b>Sản phẩm:</b> {selectedOrderCancel.productName}</p>
+                            <p><b>Số lượng:</b> {selectedOrderCancel.quantity}</p>
+                            <p><b>Trạng thái:</b> {getStatusText(selectedOrderCancel.status)}</p>
+                        </div>
+
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => {
+                                    setOpenCancelModal(false);
+                                    setSelectedOrderCancel(null);
+                                }}
+                                className="flex-1 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 font-bold"
+                            >
+                                Đóng
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={confirmCancelOrder}
+                                className="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold shadow"
+                            >
+                                Xác nhận huỷ
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            )}
 
         </div>
     );

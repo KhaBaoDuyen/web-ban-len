@@ -10,6 +10,7 @@ export interface Order {
   productName: string;
   quantity: number;
   priceProduct: number;
+  note: string;
   totalAmount: number;
   customerName: string;
   customerPhone: string;

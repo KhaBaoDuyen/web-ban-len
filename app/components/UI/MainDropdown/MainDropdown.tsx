@@ -16,7 +16,7 @@ export const MainDropdown = ({
 
     return (
         <div className="relative group mx-4">
-             <Link href={path} className="font-semibold hover:underline flex items-center gap-1 py-4 hover:text-accent-600 transition-colors">
+             <Link href={path} className="font-semibold !text-white hover:underline flex items-center gap-1 py-4 hover:text-accent-600 transition-colors">
                 {title}
                 {hasDropdown && (
                     <ChevronDown

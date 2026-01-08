@@ -6,3 +6,8 @@
 @use  "./components/scroll-custom.scss";
 @use  "./components/mobile-menu.scss";
 @use  "./components/leading-page.scss";
+@use "./abstracts/colors" as * ;
+
+h1,h2,h3,h4,h5,h6,a,p{
+    color: $text-heading;
+}

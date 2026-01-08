@@ -8,7 +8,8 @@ import { formatVND } from "@/app/utils/formatVND";
 import {
     FiMinus, FiPlus, FiShoppingCart, FiChevronRight,
     FiChevronUp, FiChevronDown, FiShield, FiTruck,
-    FiRefreshCw, FiUser, FiPhone, FiCreditCard, FiPackage
+    FiRefreshCw, FiUser, FiPhone, FiCreditCard, FiPackage,
+    FiFileText
 } from "react-icons/fi";
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -23,7 +24,7 @@ export default function ProductDetail() {
     const [openConfirm, setOpenConfirm] = useState(false);
 
 
-    const [customerInfo, setCustomerInfo] = useState({ name: "", phone: "", paymentMethod: "cod" });
+    const [customerInfo, setCustomerInfo] = useState({ name: "", phone: "", paymentMethod: "cod", note: "" });
     const [errors, setErrors] = useState({ name: "", phone: "" });
 
     useEffect(() => {
@@ -75,6 +76,7 @@ export default function ProductDetail() {
                     productId: data?._id,
                     productName: data?.name,
                     price: data?.price,
+                    note: customerInfo?.note,
                     quantity: quantity,
                     customerName: customerInfo.name,
                     customerPhone: customerInfo.phone,
@@ -86,7 +88,7 @@ export default function ProductDetail() {
 
             if (response.ok) {
                 toast.success("Đặt hàng thành công!", { id: loadingToast });
-                setCustomerInfo({ name: "", phone: "", paymentMethod: "cod" });
+                setCustomerInfo({ name: "", phone: "", paymentMethod: "cod", note: "" });
                 setQuantity(1);
             } else {
                 toast.error(result.message || "Đặt hàng thất bại", { id: loadingToast });
@@ -126,7 +128,7 @@ export default function ProductDetail() {
                     </div>
 
                     <div className="lg:col-span-7 space-y-6">
-                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <div className="bg-white lg:p-6 p-3 rounded-2xl shadow-sm border border-slate-100">
                             <span className="inline-block px-3 py-1 rounded-full text-[10px] font-bold mb-3 bg-accent-100 text-accent-600 uppercase tracking-widest">
                                 {data.status === 1 ? 'Còn hàng' : 'Tạm hết hàng'}
                             </span>
@@ -137,7 +139,7 @@ export default function ProductDetail() {
                                 {formatVND(Number(data.price))}
                             </div>
 
-                            <div className="bg-primary-50 p-5 rounded-xl border border-slate-200 space-y-4 mb-6">
+                            <div className="bg-primary-50 lg:p-5 p-3 rounded-xl border border-slate-200 space-y-4 mb-6">
                                 <h3 className="font-bold text-slate-800 flex items-center gap-2">
                                     <FiShoppingCart className="text-accent-600" /> Thông tin đặt hàng
                                 </h3>
@@ -190,22 +192,63 @@ export default function ProductDetail() {
                                         </div>
                                         {errors.phone && <p className="text-[11px] text-red-500 ml-1">{errors.phone}</p>}
                                     </div>
+
                                 </div>
+                                <div className="space-y-1">
+                                    <div className="relative">
+                                        <FiFileText className="absolute left-3 top-3 text-slate-400" />
+                                        <textarea
+                                            placeholder="Ghi chú"
+                                            rows={3}
+                                            className="w-full pl-10 pr-4 py-2.5 rounded-lg border bg-white outline-none transition 
+                 border-slate-200 focus:border-accent-600"
+                                            value={customerInfo.note}
+                                            onChange={(e) =>
+                                                setCustomerInfo({ ...customerInfo, note: e.target.value })
+                                            }
+                                        />
+                                    </div>
+                                </div>
+
 
                                 <div className="space-y-2">
                                     <p className="text-sm font-bold text-slate-700">Hình thức thanh toán:</p>
-                                    <div className="  gap-3">
-                                        <label className={`lg:flex items-center gap-2 p-3 rounded-lg border cursor-pointer transition ${customerInfo.paymentMethod === 'cod' ? 'border-accent-600 bg-accent-50' : 'border-slate-200 bg-white hover:border-accent-300'}`}>
-                                            <input type="radio" name="payment" className="hidden" onChange={() => setCustomerInfo({ ...customerInfo, paymentMethod: 'cod' })} />
-                                            <FiPackage className={customerInfo.paymentMethod === 'cod' ? 'text-accent-600' : 'text-slate-400'} />
-                                            <span className={`text-sm font-bold ${customerInfo.paymentMethod === 'cod' ? 'text-accent-600' : 'text-slate-600'}`}>Thanh toán khi nhận hàng</span>
+                                    <div className="w-full">
+                                        <label
+                                            className={`
+      flex w-full items-center gap-2 p-3 rounded-xl border cursor-pointer transition
+      ${customerInfo.paymentMethod === 'cod'
+                                                    ? 'border-accent-600 bg-accent-50'
+                                                    : 'border-slate-200 bg-white hover:border-accent-300'}
+    `}
+                                        >
+                                            <input
+                                                type="radio"
+                                                name="payment"
+                                                className="hidden"
+                                                onChange={() =>
+                                                    setCustomerInfo({ ...customerInfo, paymentMethod: 'cod' })
+                                                }
+                                            />
+
+                                            <FiPackage
+                                                className={`text-xl shrink-0 ${customerInfo.paymentMethod === 'cod'
+                                                        ? 'text-accent-600'
+                                                        : 'text-slate-400'
+                                                    }`}
+                                            />
+
+                                            <span
+                                                className={`text-sm font-semibold leading-tight ${customerInfo.paymentMethod === 'cod'
+                                                        ? 'text-accent-600'
+                                                        : 'text-slate-600'
+                                                    }`}
+                                            >
+                                                Thanh toán khi nhận hàng
+                                            </span>
                                         </label>
-                                        {/* <label className={`lg:flex items-center gap-2 p-3 rounded-lg border cursor-pointer transition ${customerInfo.paymentMethod === 'transfer' ? 'border-accent-600 bg-accent-50' : 'border-slate-200 bg-white hover:border-accent-300'}`}>
-                                            <input type="radio" name="payment" className="hidden" onChange={() => setCustomerInfo({ ...customerInfo, paymentMethod: 'transfer' })} />
-                                            <FiCreditCard className={customerInfo.paymentMethod === 'transfer' ? 'text-accent-600' : 'text-slate-400'} />
-                                            <span className={`text-sm font-bold ${customerInfo.paymentMethod === 'transfer' ? 'text-accent-600' : 'text-slate-600'}`}>Chuyển khoản</span>
-                                        </label> */}
                                     </div>
+
                                 </div>
                             </div>
 
@@ -322,6 +365,7 @@ export default function ProductDetail() {
                                     <p><b>Khách hàng:</b> {customerInfo.name}</p>
                                     <p><b>SĐT:</b> {customerInfo.phone}</p>
                                     <p><b>Thanh toán:</b> Thanh toán khi nhận hàng</p>
+                                    <p><b>Ghi chú:</b> {customerInfo.note}</p>
                                 </div>
                             </div>
 

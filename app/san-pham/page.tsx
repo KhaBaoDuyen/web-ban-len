@@ -124,7 +124,7 @@ export default function ProductsPage() {
                         ))}
                     </div>
                 </div>
-                <aside className="hidden lg:block w-full shadow col-span-3 bg-white rounded-2xl p-4 h-fit sticky top-24">
+                <aside className="hidden lg:block w-full shadow col-span-3 bg-white rounded-2xl p-4 h-fit sticky top-44">
                     <h3 className="font-bold text-lg text-accent-600 mb-4">
                         Danh mục
                     </h3>
@@ -229,6 +229,7 @@ export default function ProductsPage() {
                                         description={product.description}
                                         slug={product.slug}
                                         status={product.status}
+                                        
                                     />
                                 ))}
                             </div>

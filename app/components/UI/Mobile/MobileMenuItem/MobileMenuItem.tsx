@@ -57,7 +57,7 @@ export const MobileMenuItem = ({
             ) : (
                  <Link
                     href={path}
-                    className="block px-5 py-3 text-md text-white hover:text-accent-600 hover:bg-white/5 transition-colors"
+                    className="block px-5 py-3 text-md !text-white hover:text-accent-600 hover:bg-white/5 transition-colors"
                     onClick={onCloseMenu}
                 >
                     {title}

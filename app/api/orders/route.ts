@@ -71,6 +71,7 @@ export async function POST(request: Request) {
             productName,
             price,
             quantity,
+            note,
             customerName,
             customerPhone,
             paymentMethod
@@ -104,6 +105,7 @@ export async function POST(request: Request) {
             totalAmount: Number(price) * Number(quantity),
             customerName,
             customerPhone,
+            note,
             paymentMethod,
             status: "pending",
             createdAt: new Date(),

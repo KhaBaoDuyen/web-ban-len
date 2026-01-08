@@ -14,15 +14,19 @@ export const HeaderData: HeaderGroup[] = [
         path: "/ma-thanh-toan",
     },
     {
-        title: "Danh sách sản phẩm",
+        title: "Ds. Sản phẩm",
         path: "/quan-ly-san-pham",
     },
     {
-        title: "Danh sách đơn hàng",
+        title: "Ds. Đơn hàng",
         path: "/danh-sach-don-hang",
     },
     {
-        title: "Danh sách nguyên liệu",
+        title: "Ds. Nguyên liệu",
         path: "/nguyen-lieu-nhap",
+    },
+    {
+        title: "Thống kê",
+        path: "/thong-ke",
     },
 ];
