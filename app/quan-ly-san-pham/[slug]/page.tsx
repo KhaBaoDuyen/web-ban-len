@@ -50,7 +50,29 @@ export default function EditProductForm() {
             .then((res) => setData(res));
     }, [slug]);
 
-    if (!data) return <div className="p-10">Đang tải dữ liệu sản phẩm...</div>;
+    const [fadeOut, setFadeOut] = useState(false);
+
+    if (!data) return (
+        <div className={`splash-screen ${fadeOut ? "splash-fade-out" : ""}`}>
+            <div className="splash-content">
+                <div className="logo-wrapper">
+                    <img
+                        src="/assets/logo-light.png"
+                        alt="Logo Tiệm Len"
+                        className="logo-img"
+                    />
+                </div>
+                <div className="loading-container">
+                    <p className="shop-name text-accent-600">
+                        Tiệm Len Handmade
+                    </p>
+                    <div className="progress-bar">
+                        <div className="progress-fill bg-accent-600"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 
     return (
         <ProductForm
