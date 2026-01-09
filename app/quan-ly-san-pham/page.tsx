@@ -124,7 +124,7 @@ export default function QuanLySanPham() {
                         </p>
                     </div>
 
-                    <div className="inline-flex items-center justify-center gap-2 bg-accent-600 !text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-sm active:scale-95">
+                    <div className="inline-flex items-center justify-center gap-2 bg-primary-600 !text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-sm active:scale-95">
                         <PlusIcon className="w-5 h-5" />
                         <Link href={"/quan-ly-san-pham/them-san-pham"} className="!text-white">Thêm sản phẩm</Link>
                     </div>

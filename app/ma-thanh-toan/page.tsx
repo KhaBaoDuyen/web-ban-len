@@ -102,7 +102,7 @@ export default function ThanhToan() {
 
                 <div className="mt-12 bg-primary-600 rounded-3xl p-8 text-white text-center shadow-xl shadow-indigo-200">
                     <h3 className="text-xl font-bold mb-2">Nội dung chuyển khoản</h3>
-                    <div className=" bg-accent-100 py-3 px-6 rounded-xl inline-flex items-center gap-4 text-2xl text-primary font-mono tracking-wider border border-indigo-400">
+                    <div className=" bg-primary-100 py-3 px-6 rounded-xl inline-flex items-center gap-4 text-2xl text-primary font-mono tracking-wider border border-indigo-400">
                         {paymentInfo.orderId}
                         <button onClick={() => copyToClipboard(paymentInfo.orderId)} className="hover:scale-110 transition-transform">
                             <DocumentDuplicateIcon className="w-6 h-6" />

@@ -13,7 +13,6 @@ export default function ProductsPage() {
     const [range, setRange] = useState<"all" | "under50" | "50to100" | "over100">("all");
     const [fadeOut, setFadeOut] = useState(false);
 
-    // --- PHẦN THÊM MỚI: STATE PHÂN TRANG ---
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 12;
 
@@ -51,8 +50,7 @@ export default function ProductsPage() {
         return products.slice(startIndex, startIndex + itemsPerPage);
     }, [products, currentPage]);
 
-    // Reset trang về 1 khi lọc thay đổi
-    useEffect(() => {
+     useEffect(() => {
         setCurrentPage(1);
     }, [range, selectedCategory]);
 
@@ -78,8 +76,7 @@ export default function ProductsPage() {
             </section>
 
             <div className="lg:grid grid-cols-12 gap-5 lg:w-10/12 w-11/12 mx-auto py-10">
-                {/* Mobile Categories - GIỮ NGUYÊN */}
-                <div className="lg:hidden mb-4 overflow-x-auto py-2">
+                 <div className="lg:hidden mb-4 overflow-x-auto py-2">
                     <div className="flex gap-2 w-max px-1">
                         <button
                             onClick={() => setSelectedCategory("all")}
@@ -101,15 +98,14 @@ export default function ProductsPage() {
                     </div>
                 </div>
 
-                {/* Sidebar Desktop - GIỮ NGUYÊN */}
-                <aside className="hidden lg:block w-full shadow col-span-3 bg-white rounded-2xl p-4 h-fit sticky top-44">
-                    <h3 className="font-bold text-lg text-accent-600 mb-4">Danh mục</h3>
+                 <aside className="hidden lg:block w-full shadow col-span-3 bg-white rounded-2xl p-4 h-fit sticky top-44">
+                    <h3 className="font-bold text-lg text-primary-600 mb-4">Danh mục</h3>
                     <ul className="space-y-2">
                         <li>
                             <button
                                 onClick={() => setSelectedCategory("all")}
                                 className={`w-full text-left px-3 py-2 rounded-xl font-medium transition
-                                ${selectedCategory === "all" ? "bg-accent-100 text-accent-700" : "hover:bg-slate-100"}`}
+                                ${selectedCategory === "all" ? "bg-primary-100 text-primary-700" : "hover:bg-slate-100"}`}
                             >
                                 Tất cả sản phẩm
                             </button>
@@ -119,7 +115,7 @@ export default function ProductsPage() {
                                 <button
                                     onClick={() => setSelectedCategory(cat._id)}
                                     className={`w-full text-left px-3 py-2 rounded-xl font-medium transition
-                                    ${selectedCategory === cat._id ? "bg-accent-100 text-accent-700" : "hover:bg-slate-100"}`}
+                                    ${selectedCategory === cat._id ? "bg-primary-100 text-primary-700" : "hover:bg-slate-100"}`}
                                 >
                                     {cat.name}
                                 </button>
@@ -131,7 +127,7 @@ export default function ProductsPage() {
                 <section className="col-span-9">
                     <div id="san-pham" className="flex flex-col mx-auto font-sans py-5">
                         <span className="lg:flex justify-between items-center">
-                            <h1 className="font-bold text-2xl text-accent-600">Danh sách sản phẩm</h1>
+                            <h1 className="font-bold text-2xl text-primary-600">Danh sách sản phẩm</h1>
                             <div className="mb-5 flex items-center gap-3 mt-2">
                                 <label htmlFor="priceFilter" className="font-bold">Lọc theo giá:</label>
                                 <select
@@ -158,7 +154,7 @@ export default function ProductsPage() {
                                 <h3 className="text-xl font-bold text-slate-700">Danh mục này chưa có sản phẩm</h3>
                                 <button
                                     onClick={() => setSelectedCategory("all")}
-                                    className="mt-4 px-5 py-2 rounded-xl bg-accent-600 text-white font-semibold"
+                                    className="mt-4 px-5 py-2 rounded-xl bg-primary-600 text-white font-semibold"
                                 >
                                     Xem tất cả sản phẩm
                                 </button>
@@ -196,8 +192,8 @@ export default function ProductsPage() {
                                                 onClick={() => setCurrentPage(i + 1)}
                                                 className={`w-10 h-10 rounded-xl font-semibold transition ${
                                                     currentPage === i + 1
-                                                        ? "bg-accent-600 text-white shadow-lg shadow-accent-200"
-                                                        : "bg-white border border-gray-200 text-slate-600 hover:border-accent-600"
+                                                        ? "bg-primary-600 text-white shadow-lg shadow-primary-200"
+                                                        : "bg-white border border-gray-200 text-slate-600 hover:border-primary-600"
                                                 }`}
                                             >
                                                 {i + 1}

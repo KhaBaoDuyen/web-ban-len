@@ -29,7 +29,7 @@ export default function ProductCard({
                         {name}
                     </h3>
 
-                    <span className="text-lg font-bold text-accent-600">
+                    <span className="text-lg font-bold text-primary-600">
                         {formatVND(Number(price))}
                     </span>
 

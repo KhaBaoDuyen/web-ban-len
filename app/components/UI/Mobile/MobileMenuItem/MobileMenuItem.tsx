@@ -45,7 +45,7 @@ export const MobileMenuItem = ({
                                 <Link
                                     key={i}
                                     href={item.path}
-                                    className="block px-10 py-2.5 !text-white hover:text-white hover:bg-white/5 border-l-2 border-transparent hover:border-accent-600"
+                                    className="block px-10 py-2.5 !text-white hover:text-white hover:bg-white/5 border-l-2 border-transparent hover:border-primary-600"
                                     onClick={onCloseMenu}
                                 >
                                     {item.name}
@@ -57,7 +57,7 @@ export const MobileMenuItem = ({
             ) : (
                  <Link
                     href={path}
-                    className="block px-5 py-3 text-md !text-white hover:text-accent-600 hover:bg-white/5 transition-colors"
+                    className="block px-5 py-3 text-md !text-white hover:text-primary-600 hover:bg-white/5 transition-colors"
                     onClick={onCloseMenu}
                 >
                     {title}

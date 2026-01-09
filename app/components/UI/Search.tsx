@@ -82,7 +82,7 @@ export const Search = ({
 
         <button
           onClick={() => keyword && router.push(`/san-pham?search=${keyword}`)}
-          className="bg-primary-700 min-w-max px-4 py-2 rounded text-white ml-2 hover:bg-accent-700"
+          className="bg-primary-700 min-w-max px-4 py-2 rounded text-white ml-2 hover:bg-primary-700"
         >
           Tìm kiếm
         </button>

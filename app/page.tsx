@@ -107,14 +107,14 @@ export default function Home() {
               Mỗi sản phẩm là một câu chuyện tình yêu gửi gắm trong từng mũi kim.
             </p>
             <div className="flex flex-wrap gap-4 hidden lg:block">
-              <Link href="#san-pham" className="px-8 py-3 bg-accent-600 text-white rounded-full font-bold hover:bg-slate-800 transition-all active:scale-95 shadow ">
+              <Link href="#san-pham" className="px-8 py-3 bg-accent-600 !text-white rounded-full font-bold hover:bg-slate-800 transition-all active:scale-95 shadow ">
                 Khám phá ngay
               </Link>
               <a
                 href="https://zalo.me/0337019197"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-8 py-3 ml-3 bg-accent-200 text-slate-900 border border-slate-200 rounded-full font-bold hover:bg-slate-50 transition-all"
+                className="px-8 py-3 ml-3 bg-primary-200 text-slate-900 border border-slate-200 rounded-full font-bold hover:bg-slate-50 transition-all"
               >
                 Chat Zalo ngay
               </a>
@@ -155,7 +155,7 @@ export default function Home() {
 
       <section className="flex flex-col lg:w-10/12 w-11/12 mx-auto font-sans py-5">
         <div className="text-center mb-4">
-          <h1 className="font-bold text-3xl text-accent-600">Sản phẩm mới</h1>
+          <h1 className="font-bold text-3xl text-primary-600">Sản phẩm mới</h1>
           <p className="text-muted">Những sản phẩm mới cập nhật tại đây.</p>
         </div>
 
@@ -222,7 +222,7 @@ export default function Home() {
             <div className="space-y-16 text-center lg:text-right">
               <div>
                 <div className="flex lg:justify-end justify-center mb-4">
-                  <div className="p-3 bg-accent-50 text-accent-600 rounded-xl border border-accent-100 shadow-sm">
+                  <div className="p-3 bg-primary-50 text-primary-600 rounded-xl border border-primary-100 shadow-sm">
                     <PackageCheck size={28} strokeWidth={1.5} />
                   </div>
                 </div>
@@ -234,7 +234,7 @@ export default function Home() {
 
               <div>
                 <div className="flex lg:justify-end justify-center mb-4">
-                  <div className="p-3 bg-accent-50 text-accent-600 rounded-xl border border-accent-100 shadow-sm">
+                  <div className="p-3 bg-primary-50 text-primary-600 rounded-xl border border-primary-100 shadow-sm">
                     <Sparkles size={28} strokeWidth={1.5} />
                   </div>
                 </div>
@@ -246,7 +246,7 @@ export default function Home() {
             </div>
 
             <div className="relative group hidden lg:block">
-              <div className="absolute -inset-4 bg-accent-100/50 rounded-[40px] blur-2xl group-hover:bg-accent-200/50 transition duration-500"></div>
+              <div className="absolute -inset-4 bg-primary-100/50 rounded-[40px] blur-2xl group-hover:bg-primary-200/50 transition duration-500"></div>
               <div className="relative aspect-square bg-white rounded-3xl flex items-center justify-center overflow-hidden border-[12px] border-white shadow-2xl">
                 <img
                   src="/assets/product-wool.jpg"
@@ -259,7 +259,7 @@ export default function Home() {
             <div className="space-y-16 lg:text-left text-center">
               <div>
                 <div className="flex lg:justify-start justify-center mb-4">
-                  <div className="p-3 bg-accent-50 text-accent-600 rounded-xl border border-accent-100 shadow-sm">
+                  <div className="p-3 bg-primary-50 text-primary-600 rounded-xl border border-primary-100 shadow-sm">
                     <Scissors size={28} strokeWidth={1.5} />
                   </div>
                 </div>
@@ -271,7 +271,7 @@ export default function Home() {
 
               <div>
                 <div className="flex lg:justify-start justify-center mb-4">
-                  <div className="p-3 bg-accent-50 text-accent-600 rounded-xl border border-accent-100 shadow-sm">
+                  <div className="p-3 bg-primary-50 text-primary-600 rounded-xl border border-primary-100 shadow-sm">
                     <Leaf size={28} strokeWidth={1.5} />
                   </div>
                 </div>
@@ -288,7 +288,7 @@ export default function Home() {
       <section className="bg-white ">
         <div id="san-pham" className="flex flex-col lg:w-10/12 w-11/12 mx-auto font-sans  py-5">
           <span className="lg:flex justify-between ">
-            <h1 className="font-bold text-2xl text-accent-600">Danh sách sản phẩm</h1>
+            <h1 className="font-bold text-2xl text-primary-600">Danh sách sản phẩm</h1>
             <div className="mb-5 flex items-center gap-3  mt-2">
               <label htmlFor="priceFilter" className="font-bold">Lọc theo giá:</label>
               <select
@@ -317,11 +317,11 @@ export default function Home() {
                   />
                 </div>
                 <div className="loading-container">
-                  <p className="shop-name text-accent-600">
+                  <p className="shop-name text-primary-600">
                     Tiệm Len Handmade
                   </p>
                   <div className="progress-bar">
-                    <div className="progress-fill bg-accent-600"></div>
+                    <div className="progress-fill bg-primary-600"></div>
                   </div>
                 </div>
               </div>

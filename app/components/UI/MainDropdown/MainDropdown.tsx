@@ -16,7 +16,7 @@ export const MainDropdown = ({
 
     return (
         <div className="relative group mx-4">
-             <Link href={path} className="font-semibold !text-white hover:underline flex items-center gap-1 py-4 hover:text-accent-600 transition-colors">
+             <Link href={path} className="font-semibold !text-white hover:underline flex items-center gap-1 py-4 hover:text-primary-600 transition-colors">
                 {title}
                 {hasDropdown && (
                     <ChevronDown
@@ -34,7 +34,7 @@ export const MainDropdown = ({
                     rounded-xl shadow-2xl z-50 border border-white/20"
                 >
                      <div className="border-r border-gray-300/50 pr-6">
-                        <h3 className="mb-4 text-accent-600 font-bold uppercase text-sm tracking-wider">
+                        <h3 className="mb-4 text-primary-600 font-bold uppercase text-sm tracking-wider">
                             Danh mục
                         </h3>
                         <div className="flex gap-8">
@@ -53,21 +53,21 @@ export const MainDropdown = ({
                             ))}
                         </div>
 
-                         <div className="mt-5 flex flex-col gap-3 border-t border-accent-600/20 pt-4">
-                            <Link href="/update" className="border-2 border-accent-600 text-on-primary px-4 py-1.5 rounded-xl text-sm text-center bg-accent-700 transition-colors">
+                         <div className="mt-5 flex flex-col gap-3 border-t border-primary-600/20 pt-4">
+                            <Link href="/update" className="border-2 border-primary-600 text-on-primary px-4 py-1.5 rounded-xl text-sm text-center bg-primary-700 transition-colors">
                                 Cập nhật phần mềm
                             </Link>
-                            <Link href="/account" className="border-2 border-accent-600 text-on-primary px-4 py-1.5 rounded-xl text-sm text-center bg-accent-700 transition-colors">
+                            <Link href="/account" className="border-2 border-primary-600 text-on-primary px-4 py-1.5 rounded-xl text-sm text-center bg-primary-700 transition-colors">
                                 Tài khoản
                             </Link>
-                            <Link href="/news" className="border-2 border-accent-600 text-on-primary px-4 py-1.5 rounded-xl text-sm text-center bg-accent-700 transition-colors">
+                            <Link href="/news" className="border-2 border-primary-600 text-on-primary px-4 py-1.5 rounded-xl text-sm text-center bg-primary-700 transition-colors">
                                 Tin tức của Ditigon
                             </Link>
                         </div>
                     </div>
 
                      <div className="border-r border-gray-300/50 pr-6">
-                        <h3 className="mb-4 text-accent-600 font-bold uppercase text-sm tracking-wider">
+                        <h3 className="mb-4 text-primary-600 font-bold uppercase text-sm tracking-wider">
                             Thương hiệu
                         </h3>
                         {brands.length > 0 ? (
@@ -93,20 +93,20 @@ export const MainDropdown = ({
                     </div>
 
                      <div>
-                        <h3 className="mb-4 text-accent-600 font-bold uppercase text-sm tracking-wider">
+                        <h3 className="mb-4 text-primary-600 font-bold uppercase text-sm tracking-wider">
                             Tìm kiếm nhiều
                         </h3>
                         <div className="flex flex-col gap-4">
                             {popularSearches.length > 0 ? (
                                 popularSearches.map((item, i) => (
-                                    <Link key={i} href={item.path} className="font-medium hover:underline text-sm hover:text-accent-600 transition-colors">
+                                    <Link key={i} href={item.path} className="font-medium hover:underline text-sm hover:text-primary-600 transition-colors">
                                         {item.name}
                                     </Link>
                                 ))
                             ) : (
                                 <p className="text-gray-400 text-xs italic">Chưa có tìm kiếm nào...</p>
                             )}
-                            <Link href="/tat-ca" className="text-accent-600 text-sm mt-2 flex items-center gap-1 hover:underline">
+                            <Link href="/tat-ca" className="text-primary-600 text-sm mt-2 flex items-center gap-1 hover:underline">
                                 Xem thêm &gt;
                             </Link>
                         </div>

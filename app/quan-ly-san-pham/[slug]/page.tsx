@@ -63,11 +63,11 @@ export default function EditProductForm() {
                     />
                 </div>
                 <div className="loading-container">
-                    <p className="shop-name text-accent-600">
+                    <p className="shop-name text-primary-600">
                         Tiệm Len Handmade
                     </p>
                     <div className="progress-bar">
-                        <div className="progress-fill bg-accent-600"></div>
+                        <div className="progress-fill bg-primary-600"></div>
                     </div>
                 </div>
             </div>
