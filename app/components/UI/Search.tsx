@@ -7,7 +7,7 @@ interface Product {
   _id?: string;
   name: string;
   slug: string;
-  images1 ?: string;
+  images?: string;
 }
 
 interface SearchProps {
