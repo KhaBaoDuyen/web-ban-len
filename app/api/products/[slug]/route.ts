@@ -44,27 +44,27 @@ export async function GET(
 }
 
 //CAP NHAT SAN PHAM
-
 export async function PUT(
     req: NextRequest,
     { params }: { params: Promise<{ slug: string }> }
 ) {
     try {
         const { slug } = await params;
-
         const client = await clientPromise;
         const db = client.db("mydatabase");
         const products = db.collection("products");
 
         const formData = await req.formData();
-
         const name = formData.get("name") as string;
         const newSlug = formData.get("slug") as string;
         const price = formData.get("price") as string;
         const description = formData.get("description") as string;
         const status = Number(formData.get("status"));
         const categoryId = formData.get("categoryId") as string;
-        const imageFile = formData.get("image") as File | null;
+
+        const existingImagesJson = formData.get("existingImages") as string;
+        const existingImages = existingImagesJson ? JSON.parse(existingImagesJson) : [];
+        const newImageFiles = formData.getAll("images") as File[];
 
         if (!name || !newSlug || !price || !description || !categoryId) {
             return NextResponse.json(
@@ -93,32 +93,32 @@ export async function PUT(
             );
         }
 
-        // XỬ LÝ ẢNH
-        let imageUrl = existingProduct.image;
+        let finalImages = [...existingImages];
 
-        if (imageFile && imageFile.size > 0) {
-            const buffer = Buffer.from(await imageFile.arrayBuffer());
-
-            const uploadResponse: any = await new Promise((resolve, reject) => {
-                cloudinary.uploader.upload_stream(
-                    { folder: "products" },
-                    (error, result) => {
-                        if (error) reject(error);
-                        else resolve(result);
-                    }
-                ).end(buffer);
-            });
-
-            imageUrl = uploadResponse.secure_url;
+        if (newImageFiles && newImageFiles.length > 0) {
+            for (const file of newImageFiles) {
+                if (file instanceof File && file.size > 0) {
+                    const buffer = Buffer.from(await file.arrayBuffer());
+                    const uploadResponse: any = await new Promise((resolve, reject) => {
+                        cloudinary.uploader.upload_stream(
+                            { folder: "products" },
+                            (error, result) => {
+                                if (error) reject(error);
+                                else resolve(result);
+                            }
+                        ).end(buffer);
+                    });
+                    finalImages.push(uploadResponse.secure_url);
+                }
+            }
         }
 
-        //   DATA UPDATE
         const updatedData = {
             name,
             slug: newSlug,
             price: Number(price),
             description,
-            image: imageUrl,
+            images: finalImages,
             status,
             categoryId: new ObjectId(categoryId),
             updatedAt: new Date(),
@@ -163,9 +163,9 @@ export async function DELETE(
             );
         }
 
-        if (existingProduct.image) {
+        if (existingProduct.images) {
             try {
-                const urlParts = existingProduct.image.split("/");
+                const urlParts = existingProduct.images.split("/");
                 const fileName = urlParts[urlParts.length - 1].split(".")[0];
                 const publicId = `products/${fileName}`;
 

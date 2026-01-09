@@ -6,8 +6,8 @@ export type Product = {
     slug: string;
     price: string;
     note?: string;
-    image: File | null;
-    imageUrl?: string | null;
+    images: string[];
+    imageUrl?: string | [];
     description: string;
     status: 0 | 1;
     categoryId?: string;

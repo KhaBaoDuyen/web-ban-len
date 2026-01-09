@@ -9,10 +9,10 @@ export const HeaderData: HeaderGroup[] = [
         title: "Trang sản phẩm",
         path: "/san-pham",
     },
-    {
-        title: "Mã thanh toán",
-        path: "/ma-thanh-toan",
-    },
+    // {
+    //     title: "Mã thanh toán",
+    //     path: "/ma-thanh-toan",
+    // },
     {
         title: "Ds. Sản phẩm",
         path: "/quan-ly-san-pham",

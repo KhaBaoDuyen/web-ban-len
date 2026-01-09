@@ -83,11 +83,7 @@ export default function EditProductForm() {
                 slug: data.slug,
                 price: String(data.price),
                 description: data.description,
-                imageUrl: typeof data.image === "string"
-                    ? data.image
-                    : data.image instanceof File
-                        ? URL.createObjectURL(data.image)
-                        : null,
+                images: data.images,
                 status: data.status,
 
                 categoryId: typeof data.categoryId === "string"

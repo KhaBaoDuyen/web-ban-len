@@ -22,6 +22,40 @@
   color: $primary-100 !important;
   background: $primary-600;
 }
-.swiper-slide .cardproduct{
+
+.swiper-slide .cardproduct {
   background: white !important;
+}
+
+.product-swiper-main .swiper-button-next,
+.product-swiper-main .swiper-button-prev {
+  color: #fff;
+  background: rgba(0, 0, 0, 0.3);
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  transform: scale(0.8);
+}
+
+.product-swiper-main .swiper-button-next:after,
+.product-swiper-main .swiper-button-prev:after {
+  font-size: 16px;
+}
+
+.product-swiper-main .swiper-pagination-bullet-active {
+  background: #8f593b;
+}
+
+/* Style cho ảnh thu nhỏ */
+.thumbs-swiper .swiper-slide {
+  opacity: 0.6;
+}
+
+.thumbs-swiper .swiper-slide-thumb-active {
+  opacity: 1;
+}
+
+.thumbs-swiper .swiper-slide-thumb-active div {
+  border-color: #8f593b !important;
+  /* Màu của primary-600 */
 }

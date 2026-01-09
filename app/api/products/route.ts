@@ -32,7 +32,6 @@ export async function GET() {
 }
 
 //THEM SAN PHAM
-
 function uploadToCloudinary(buffer: Buffer) {
   return new Promise<any>((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
@@ -42,11 +41,9 @@ function uploadToCloudinary(buffer: Buffer) {
         resolve(result);
       }
     );
-
     stream.end(buffer);
   });
 }
-
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -58,17 +55,18 @@ export const POST = async (req: NextRequest) => {
     const description = formData.get("description")?.toString();
     const status = Number(formData.get("status"));
     const categoryId = formData.get("categoryId")?.toString();
-    const image = formData.get("image") as File;
+    
+     const images = formData.getAll("images") as File[];
 
-    if (!name || !slug || !price || !description || !image || !categoryId) {
-      return NextResponse.json({ error: "Thiếu dữ liệu bắt buộc" }, { status: 400 });
+     if (!name || !slug || !price || !description || images.length === 0 || !categoryId) {
+      return NextResponse.json({ error: "Thiếu dữ liệu hoặc chưa có ảnh" }, { status: 400 });
     }
 
     const client = await clientPromise;
     const db = client.db("mydatabase");
     const products = db.collection("products");
 
-    const exist = await products.findOne({
+     const exist = await products.findOne({
       $or: [{ name }, { slug }],
     });
 
@@ -79,15 +77,21 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    const buffer = Buffer.from(await image.arrayBuffer());
-    const uploadResult = await uploadToCloudinary(buffer);
+     const uploadPromises = images.map(async (file) => {
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      const result = await uploadToCloudinary(buffer);
+      return result.secure_url;  
+    });
 
-    await products.insertOne({
+     const imageUrls = await Promise.all(uploadPromises);
+
+     await products.insertOne({
       name,
       slug,
       price,
       description,
-      image: uploadResult.secure_url,
+      images: imageUrls, 
       status,
       categoryId: new ObjectId(categoryId),
       createdAt: new Date(),

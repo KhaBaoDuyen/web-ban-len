@@ -30,7 +30,7 @@ export async function GET() {
                                 _id: 1,
                                 name: 1,
                                 price: 1,
-                                image: 1,
+                                images: 1,
                                 slug: 1,
                                 status: 1,
                             }

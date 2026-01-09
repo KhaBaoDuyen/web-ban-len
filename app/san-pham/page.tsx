@@ -50,7 +50,7 @@ export default function ProductsPage() {
         return products.slice(startIndex, startIndex + itemsPerPage);
     }, [products, currentPage]);
 
-     useEffect(() => {
+    useEffect(() => {
         setCurrentPage(1);
     }, [range, selectedCategory]);
 
@@ -76,7 +76,7 @@ export default function ProductsPage() {
             </section>
 
             <div className="lg:grid grid-cols-12 gap-5 lg:w-10/12 w-11/12 mx-auto py-10">
-                 <div className="lg:hidden mb-4 overflow-x-auto py-2">
+                <div className="lg:hidden mb-4 overflow-x-auto py-2">
                     <div className="flex gap-2 w-max px-1">
                         <button
                             onClick={() => setSelectedCategory("all")}
@@ -98,7 +98,7 @@ export default function ProductsPage() {
                     </div>
                 </div>
 
-                 <aside className="hidden lg:block w-full shadow col-span-3 bg-white rounded-2xl p-4 h-fit sticky top-44">
+                <aside className="hidden lg:block w-full shadow col-span-3 bg-white rounded-2xl p-4 h-fit sticky top-44">
                     <h3 className="font-bold text-lg text-primary-600 mb-4">Danh mục</h3>
                     <ul className="space-y-2">
                         <li>
@@ -145,9 +145,24 @@ export default function ProductsPage() {
                         </span>
 
                         {loading ? (
-                            // Loading UI - GIỮ NGUYÊN
                             <div className={`splash-screen ${fadeOut ? "splash-fade-out" : ""}`}>
-                                {/* ... nội dung splash screen ... */}
+                                <div className="splash-content">
+                                    <div className="logo-wrapper">
+                                        <img
+                                            src="/assets/logo-light.png"
+                                            alt="Logo Tiệm Len"
+                                            className="logo-img"
+                                        />
+                                    </div>
+                                    <div className="loading-container">
+                                        <p className="shop-name text-primary-600">
+                                            Tiệm Len Handmade
+                                        </p>
+                                        <div className="progress-bar">
+                                            <div className="progress-fill bg-primary-600"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         ) : currentProducts.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -167,7 +182,7 @@ export default function ProductsPage() {
                                             key={product._id}
                                             name={product.name}
                                             price={product.price}
-                                            image={product.image}
+                                            images={product.images}
                                             description={product.description}
                                             slug={product.slug}
                                             status={product.status}
@@ -175,7 +190,6 @@ export default function ProductsPage() {
                                     ))}
                                 </div>
 
-                                {/* --- THANH PHÂN TRANG (MỚI) --- */}
                                 {totalPages > 1 && (
                                     <div className="flex items-center justify-center gap-2 mt-12 pb-5">
                                         <button
@@ -185,16 +199,15 @@ export default function ProductsPage() {
                                         >
                                             <ChevronLeft className="w-5 h-5" />
                                         </button>
-                                        
+
                                         {[...Array(totalPages)].map((_, i) => (
                                             <button
                                                 key={i}
                                                 onClick={() => setCurrentPage(i + 1)}
-                                                className={`w-10 h-10 rounded-xl font-semibold transition ${
-                                                    currentPage === i + 1
+                                                className={`w-10 h-10 rounded-xl font-semibold transition ${currentPage === i + 1
                                                         ? "bg-primary-600 text-white shadow-lg shadow-primary-200"
                                                         : "bg-white border border-gray-200 text-slate-600 hover:border-primary-600"
-                                                }`}
+                                                    }`}
                                             >
                                                 {i + 1}
                                             </button>

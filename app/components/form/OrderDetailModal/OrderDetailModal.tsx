@@ -58,9 +58,9 @@ export function OrderDetailModal({
 
     return (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4">
-             <div className="bg-white w-full max-w-2xl h-[90vh] sm:h-auto rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-                
-                 <div className="flex items-center justify-between px-5 py-4 border-b bg-white">
+            <div className="bg-white w-full max-w-2xl h-[90vh] sm:h-auto rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+
+                <div className="flex items-center justify-between px-5 py-4 border-b bg-white">
                     <div>
                         <h2 className="text-base sm:text-lg font-bold text-slate-800">Chi tiết đơn hàng</h2>
                         <p className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-wider">ID: {order.orderId}</p>
@@ -70,8 +70,8 @@ export function OrderDetailModal({
                     </button>
                 </div>
 
-                 <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
-                      <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+                    <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
                         <h3 className="text-xs font-bold text-slate-400 uppercase mb-3">Khách hàng</h3>
                         <div className="space-y-2">
                             <p className="flex items-center gap-3 text-sm font-medium text-slate-700">
@@ -95,16 +95,20 @@ export function OrderDetailModal({
                         </div>
                     </div>
 
-                     <div className="bg-white border border-slate-100 rounded-xl p-3 flex flex-col sm:flex-row gap-4">
-                        {order.product?.image && (
-                            <img
-                                src={order.product.image}
-                                alt={order.product.name}
-                                className="w-full sm:w-24 h-48 sm:h-24 object-cover rounded-lg"
-                            />
-                        )}
+                    <div className="bg-white border border-slate-100 rounded-xl p-3 grid lg:grid-cols-3 gap-4">
+                        <img
+                            src={
+                                Array.isArray(order.product?.images)
+                                    ? order.product.images[0]
+                                    : (order.product?.images || "/placeholder.png")
+                            }
+                            alt={order.product?.name || "Product Image"}
+                            className="w-full h-full object-cover col-span-1 rounded-xl"
 
-                        <div className="flex flex-col justify-between flex-1 space-y-2">
+                        />
+  
+
+                        <div className="flex flex-col justify-between flex-1 space-y-2 col-span-2">
                             <div>
                                 <p className="font-bold text-slate-800 text-sm sm:text-base leading-tight">
                                     {order.product?.name || order.productName}
@@ -121,12 +125,12 @@ export function OrderDetailModal({
                         </div>
                     </div>
 
-                     <div className="bg-amber-50/50 border border-amber-100 p-4 rounded-xl">
+                    <div className="bg-amber-50/50 border border-amber-100 p-4 rounded-xl">
                         <p className="text-[10px] text-amber-600 font-bold uppercase mb-1">Ghi chú</p>
                         <p className="text-sm text-slate-700 italic">"{order.note || "Không có ghi chú"}"</p>
                     </div>
 
-                     <div className="flex flex-col gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <div className="flex flex-col gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
                         <div className="w-full">
                             <p className="text-[10px] text-slate-400 font-bold uppercase mb-2">Trạng thái đơn hàng</p>
                             <select
@@ -148,13 +152,13 @@ export function OrderDetailModal({
                             )}
                         </div>
                         <div className="flex items-center justify-between pt-2 border-t border-slate-200">
-                             <span className="text-[10px] text-slate-400 uppercase">Ngày tạo</span>
-                             <span className="text-xs font-medium text-slate-600">{formatDate(order.createdAt)}</span>
+                            <span className="text-[10px] text-slate-400 uppercase">Ngày tạo</span>
+                            <span className="text-xs font-medium text-slate-600">{formatDate(order.createdAt)}</span>
                         </div>
                     </div>
                 </div>
 
-                 <div className="p-4 border-t bg-slate-50 flex gap-3">
+                <div className="p-4 border-t bg-slate-50 flex gap-3">
                     <button
                         onClick={onClose}
                         className="flex-1 py-3 rounded-xl bg-primary-800 text-white text-sm font-bold active:scale-95 transition-transform"

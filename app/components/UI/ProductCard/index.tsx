@@ -6,15 +6,17 @@ import Link from "next/link";
 export default function ProductCard({
     name,
     price,
-    image,
+    images,
     status,
     slug,
     description
 }: Product) {
-    const imageUrl = image instanceof File ? URL.createObjectURL(image) : (image as unknown as string);
+    const imageUrl = Array.isArray(images) && images.length > 0
+        ? images[0]
+        : "/placeholder-product.png";
 
     return (
-        <Link  href={`/san-pham/${slug}`}>
+        <Link href={`/san-pham/${slug}`}>
             <div className="group  cardproduct relative rounded-xl !bg-white border border-slate-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
                 <div className="relative rounded-xl lg:h-[14rem] h-[10rem] overflow-hidden bg-slate-100">
                     <img

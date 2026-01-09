@@ -12,6 +12,9 @@ import {
     FiFileText
 } from "react-icons/fi";
 import toast, { Toaster } from 'react-hot-toast';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper as SwiperType } from 'swiper';
+import { Pagination, Navigation, Autoplay, Thumbs, FreeMode } from 'swiper/modules';
 
 export default function ProductDetail() {
     const params = useParams();
@@ -22,7 +25,7 @@ export default function ProductDetail() {
     const [openDecription, setOpenDecription] = useState(false);
     const [loading, setLoading] = useState(true);
     const [openConfirm, setOpenConfirm] = useState(false);
-
+    const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 
     const [customerInfo, setCustomerInfo] = useState({ name: "", phone: "", paymentMethod: "cod", note: "" });
     const [errors, setErrors] = useState({ name: "", phone: "" });
@@ -100,7 +103,7 @@ export default function ProductDetail() {
 
     if (loading) return <div className="min-h-screen flex items-center justify-center text-primary-600">Đang tải...</div>;
     if (!data) return <div className="min-h-screen flex items-center justify-center text-red-500 font-bold">Sản phẩm không tồn tại!</div>;
-
+    const images = Array.isArray(data.images) ? data.images : [];
     return (
         <div className=" min-h-screen pb-10">
             <Toaster position="top-center" reverseOrder={false} />
@@ -118,12 +121,62 @@ export default function ProductDetail() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
                     <div className="lg:col-span-5">
-                        <div className="sticky top-6 aspect-square bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-                            <img
-                                src={typeof data.image === 'string' ? data.image : ''}
-                                alt={data.name}
-                                className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
-                            />
+                        <div className="sticky top-6 space-y-4">
+                             <div className="rounded-2xl border border-slate-200 overflow-hidden shadow-sm bg-white aspect-square">
+                                {images.length > 1 ? (
+                                    <Swiper
+                                        spaceBetween={10}
+                                        navigation={false}
+                                        pagination={{ clickable: true }}
+                                        autoplay={{ delay: 4000, disableOnInteraction: false }}
+                                        thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
+                                        modules={[FreeMode, Navigation, Thumbs, Pagination, Autoplay]}
+                                        className="w-full h-full product-swiper-main"
+                                    >
+                                        {images.map((img, index) => (
+                                            <SwiperSlide key={index}>
+                                                <img
+                                                    src={img}
+                                                    alt={`${data.name} ${index + 1}`}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </SwiperSlide>
+                                        ))}
+                                    </Swiper>
+                                ) : (
+                                    <img
+                                        src={images[0] || "/placeholder.png"}
+                                        alt={data.name}
+                                        className="w-full h-full object-cover"
+                                    />
+                                )}
+                            </div>
+
+                             {images.length > 1 && (
+                                <div className="px-1">
+                                    <Swiper
+                                        onSwiper={setThumbsSwiper}
+                                        spaceBetween={12}
+                                        slidesPerView={4}
+                                        freeMode={true}
+                                        watchSlidesProgress={true}
+                                        modules={[FreeMode, Navigation, Thumbs]}
+                                        className="thumbs-swiper"
+                                    >
+                                        {images.map((img, index) => (
+                                            <SwiperSlide key={index} className="cursor-pointer">
+                                                <div className="aspect-square rounded-lg border-2 border-transparent overflow-hidden transition-all duration-300 hover:opacity-80 [.swiper-slide-thumb-active_&]:border-primary-600">
+                                                    <img
+                                                        src={img}
+                                                        alt={`Thumbnail ${index}`}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                </div>
+                                            </SwiperSlide>
+                                        ))}
+                                    </Swiper>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -233,15 +286,15 @@ export default function ProductDetail() {
 
                                             <FiPackage
                                                 className={`text-xl shrink-0 ${customerInfo.paymentMethod === 'cod'
-                                                        ? 'text-primary-600'
-                                                        : 'text-slate-400'
+                                                    ? 'text-primary-600'
+                                                    : 'text-slate-400'
                                                     }`}
                                             />
 
                                             <span
                                                 className={`text-sm font-semibold leading-tight ${customerInfo.paymentMethod === 'cod'
-                                                        ? 'text-primary-600'
-                                                        : 'text-slate-600'
+                                                    ? 'text-primary-600'
+                                                    : 'text-slate-600'
                                                     }`}
                                             >
                                                 Thanh toán khi nhận hàng

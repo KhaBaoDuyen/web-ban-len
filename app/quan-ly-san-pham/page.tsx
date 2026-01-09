@@ -145,7 +145,6 @@ export default function QuanLySanPham() {
                     </div>
                 </div>
 
-                {/* CATEGORY TABS  */}
                 <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-2 no-scrollbar">
                     <button
                         onClick={() => { setActiveTab("all"); setCurrentPage(1); }}
@@ -157,7 +156,7 @@ export default function QuanLySanPham() {
                     {categories.map((cat) => (
                         <button
                             key={cat._id}
-                             onClick={() => { setActiveTab(cat._id); setCurrentPage(1); }}
+                            onClick={() => { setActiveTab(cat._id); setCurrentPage(1); }}
                             className={`px-4 py-2 rounded-xl whitespace-nowrap text-sm font-medium transition-all border ${activeTab === cat._id ? "bg-primary-900 text-white border-slate-900" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
                                 }`}
                         >
@@ -166,7 +165,6 @@ export default function QuanLySanPham() {
                     ))}
                 </div>
 
-                {/* TABLE LAYOUT  */}
                 <div className="hidden lg:block bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-[700px] border-collapse">
@@ -188,7 +186,11 @@ export default function QuanLySanPham() {
                                             <td className="px-6 text-center py-4 max-w-md ">
                                                 <div className="flex items-center gap-4">
                                                     <div className="relative w-40 h-40 rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
-                                                        <img src={`${product.image}`} alt={product.name} className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-300" />
+                                                        <img
+                                                            src={Array.isArray(product.images) ? product.images[0] : product.images}
+                                                            alt={product.name}
+                                                            className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-300"
+                                                        />
                                                     </div>
                                                     <div className="flex flex-col text-left">
                                                         <span className="font-semibold text-slate-700 leading-tight">{product.name}</span>
@@ -223,8 +225,11 @@ export default function QuanLySanPham() {
                     {currentProducts.map((product, index) => (
                         <div key={product.slug} className="border rounded-xl shadow-sm p-4 flex justify-between items-start bg-white">
                             <div className="flex gap-3">
-                                <img src={`${product.image}`} alt={product.name} className="w-20 h-20 object-cover rounded-xl" />
-                                <div className="flex flex-col">
+                                <img
+                                    src={Array.isArray(product.images) ? product.images[0] : product.images}
+                                    alt={product.name}
+                                    className="w-20 h-20 object-cover rounded-xl"
+                                />                                <div className="flex flex-col">
                                     <span className="font-semibold text-slate-700">{product.name}</span>
                                     <span className="text-xs text-slate-400 mt-0.5">
                                         ID: #SP-{1000 + startIndex + index + 1}

@@ -96,9 +96,9 @@ export const Search = ({
               onClick={() => handleSelect(item.slug)}
               className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-slate-100 transition"
             >
-              {item.image && (
+              {item.images && (
                 <img
-                  src={item.image}
+                  src={item.images}
                   alt={item.name}
                   className="w-10 h-10 object-cover rounded-lg border"
                 />
