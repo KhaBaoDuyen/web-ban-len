@@ -133,7 +133,7 @@ export default function ProductDetail() {
                                 {data.status === 1 ? 'Còn hàng' : 'Tạm hết hàng'}
                             </span>
 
-                            <h1 className="text-2xl lg:text-3xl font-black text-slate-900 mb-2 leading-tight">{data.name}</h1>
+                            <h1 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-2 leading-tight">{data.name}</h1>
 
                             <div className="text-3xl font-black text-accent-600 mb-6">
                                 {formatVND(Number(data.price))}
@@ -260,7 +260,7 @@ export default function ProductDetail() {
                                 </div>
                                 <button
                                     onClick={() => setOpenConfirm(true)}
-                                    className="w-full flex-1 h-14 bg-primary-600 text-white font-bold py-2 rounded-xl hover:bg-accent-600 transition shadow-lg uppercase tracking-widest text-sm"
+                                    className="w-full flex-1 h-16 bg-primary-600 text-white font-bold py-3 rounded-xl hover:bg-accent-600 transition shadow-lg uppercase tracking-widest text-sm"
                                 >
                                     Đặt hàng ngay
                                 </button>

@@ -82,12 +82,12 @@ export default function QuanLyDonHang() {
     const [selectedOrderCancel, setSelectedOrderCancel] = useState<Order | null>(null);
 
     const confirmCancelOrder = async () => {
-        if (!selectedOrder) return;
+        if (!selectedOrderCancel) return; // Đổi từ selectedOrder thành selectedOrderCancel
 
         const loadingToast = toast.loading("Đang huỷ đơn hàng...");
 
         try {
-            const res = await fetch(`/api/orders/${selectedOrder._id}/status`, {
+            const res = await fetch(`/api/orders/${selectedOrderCancel._id}/status`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status: "cancelled" }),
@@ -97,19 +97,18 @@ export default function QuanLyDonHang() {
 
             setOrders(prev =>
                 prev.map(o =>
-                    o._id === selectedOrder._id ? { ...o, status: "cancelled" } : o
+                    o._id === selectedOrderCancel._id ? { ...o, status: "cancelled" } : o
                 )
             );
 
             toast.success("Huỷ đơn thành công!", { id: loadingToast });
             setOpenCancelModal(false);
-            setSelectedOrder(null);
+            setSelectedOrderCancel(null);
 
         } catch {
             toast.error("Huỷ đơn thất bại!", { id: loadingToast });
         }
     };
-
 
 
     //PHAN TABS
@@ -324,16 +323,16 @@ export default function QuanLyDonHang() {
                                                     </button>
 
                                                     <button
-                                                        onClick={() => {
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setSelectedOrderCancel(order);
                                                             setOpenCancelModal(true);
                                                         }}
-
                                                         disabled={order.status === "completed" || order.status === "cancelled"}
-                                                        className={`p-2 rounded-lg transition-all
-    ${order.status === "completed" || order.status === "cancelled"
-                                                                ? "text-slate-300 cursor-not-allowed"
-                                                                : "text-slate-400 hover:text-red-600 hover:bg-red-50"}
-  `}
+                                                        className={`p-2 rounded-lg transition-all ${order.status === "completed" || order.status === "cancelled"
+                                                            ? "text-slate-300 cursor-not-allowed"
+                                                            : "text-slate-400 hover:text-red-600 hover:bg-red-50"
+                                                            }`}
                                                         title="Huỷ đơn"
                                                     >
                                                         <TrashIcon className="w-5 h-5" />

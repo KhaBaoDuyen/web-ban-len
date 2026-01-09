@@ -61,7 +61,7 @@ export const Header = () => {
               className="text-primary p-1"
               onClick={() => setOpenMenu(!openMenu)}
             >
-              {openMenu ? <X size={22} /> : <Menu size={22} />}
+              {openMenu ? <X size={25} /> : <Menu size={25} />}
             </button>
           </div>
 
